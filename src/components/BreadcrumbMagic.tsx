@@ -37,7 +37,7 @@ export function BreadcrumbMagic() {
   }
 
   // Section layer: detect /posts, /apis, etc.
-  const sectionMatch = pathname.match(/\/(posts|apis|settings|users)(?:\/|$)/)
+  const sectionMatch = pathname.match(/\/(posts|apis|settings|users|organizations)(?:\/|$)/)
   const section = sectionMatch?.[1]
 
   if (section) {

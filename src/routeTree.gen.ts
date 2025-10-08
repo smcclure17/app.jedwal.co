@@ -13,8 +13,8 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardAccountIdRouteImport } from './routes/_dashboard.$accountId'
 import { Route as DashboardAccountIdPostsRouteImport } from './routes/_dashboard.$accountId.posts'
-import { Route as DashboardAccountIdOrganizationsRouteImport } from './routes/_dashboard.$accountId.organizations'
 import { Route as DashboardAccountIdApisRouteImport } from './routes/_dashboard.$accountId.apis'
+import { Route as DashboardAccountIdOrganizationsIndexRouteImport } from './routes/_dashboard.$accountId.organizations.index'
 import { Route as DashboardAccountIdPostsPostIdRouteImport } from './routes/_dashboard.$accountId.posts.$postId'
 import { Route as DashboardAccountIdOrganizationsCreateRouteImport } from './routes/_dashboard.$accountId.organizations.create'
 import { Route as DashboardAccountIdApisApiIdRouteImport } from './routes/_dashboard.$accountId.apis.$apiId'
@@ -39,17 +39,17 @@ const DashboardAccountIdPostsRoute = DashboardAccountIdPostsRouteImport.update({
   path: '/posts',
   getParentRoute: () => DashboardAccountIdRoute,
 } as any)
-const DashboardAccountIdOrganizationsRoute =
-  DashboardAccountIdOrganizationsRouteImport.update({
-    id: '/organizations',
-    path: '/organizations',
-    getParentRoute: () => DashboardAccountIdRoute,
-  } as any)
 const DashboardAccountIdApisRoute = DashboardAccountIdApisRouteImport.update({
   id: '/apis',
   path: '/apis',
   getParentRoute: () => DashboardAccountIdRoute,
 } as any)
+const DashboardAccountIdOrganizationsIndexRoute =
+  DashboardAccountIdOrganizationsIndexRouteImport.update({
+    id: '/organizations/',
+    path: '/organizations/',
+    getParentRoute: () => DashboardAccountIdRoute,
+  } as any)
 const DashboardAccountIdPostsPostIdRoute =
   DashboardAccountIdPostsPostIdRouteImport.update({
     id: '/$postId',
@@ -58,9 +58,9 @@ const DashboardAccountIdPostsPostIdRoute =
   } as any)
 const DashboardAccountIdOrganizationsCreateRoute =
   DashboardAccountIdOrganizationsCreateRouteImport.update({
-    id: '/create',
-    path: '/create',
-    getParentRoute: () => DashboardAccountIdOrganizationsRoute,
+    id: '/organizations/create',
+    path: '/organizations/create',
+    getParentRoute: () => DashboardAccountIdRoute,
   } as any)
 const DashboardAccountIdApisApiIdRoute =
   DashboardAccountIdApisApiIdRouteImport.update({
@@ -74,22 +74,22 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/$accountId': typeof DashboardAccountIdRouteWithChildren
   '/$accountId/apis': typeof DashboardAccountIdApisRouteWithChildren
-  '/$accountId/organizations': typeof DashboardAccountIdOrganizationsRouteWithChildren
   '/$accountId/posts': typeof DashboardAccountIdPostsRouteWithChildren
   '/$accountId/apis/$apiId': typeof DashboardAccountIdApisApiIdRoute
   '/$accountId/organizations/create': typeof DashboardAccountIdOrganizationsCreateRoute
   '/$accountId/posts/$postId': typeof DashboardAccountIdPostsPostIdRoute
+  '/$accountId/organizations': typeof DashboardAccountIdOrganizationsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/$accountId': typeof DashboardAccountIdRouteWithChildren
   '/$accountId/apis': typeof DashboardAccountIdApisRouteWithChildren
-  '/$accountId/organizations': typeof DashboardAccountIdOrganizationsRouteWithChildren
   '/$accountId/posts': typeof DashboardAccountIdPostsRouteWithChildren
   '/$accountId/apis/$apiId': typeof DashboardAccountIdApisApiIdRoute
   '/$accountId/organizations/create': typeof DashboardAccountIdOrganizationsCreateRoute
   '/$accountId/posts/$postId': typeof DashboardAccountIdPostsPostIdRoute
+  '/$accountId/organizations': typeof DashboardAccountIdOrganizationsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -97,11 +97,11 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/_dashboard/$accountId': typeof DashboardAccountIdRouteWithChildren
   '/_dashboard/$accountId/apis': typeof DashboardAccountIdApisRouteWithChildren
-  '/_dashboard/$accountId/organizations': typeof DashboardAccountIdOrganizationsRouteWithChildren
   '/_dashboard/$accountId/posts': typeof DashboardAccountIdPostsRouteWithChildren
   '/_dashboard/$accountId/apis/$apiId': typeof DashboardAccountIdApisApiIdRoute
   '/_dashboard/$accountId/organizations/create': typeof DashboardAccountIdOrganizationsCreateRoute
   '/_dashboard/$accountId/posts/$postId': typeof DashboardAccountIdPostsPostIdRoute
+  '/_dashboard/$accountId/organizations/': typeof DashboardAccountIdOrganizationsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -110,33 +110,33 @@ export interface FileRouteTypes {
     | '/login'
     | '/$accountId'
     | '/$accountId/apis'
-    | '/$accountId/organizations'
     | '/$accountId/posts'
     | '/$accountId/apis/$apiId'
     | '/$accountId/organizations/create'
     | '/$accountId/posts/$postId'
+    | '/$accountId/organizations'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/$accountId'
     | '/$accountId/apis'
-    | '/$accountId/organizations'
     | '/$accountId/posts'
     | '/$accountId/apis/$apiId'
     | '/$accountId/organizations/create'
     | '/$accountId/posts/$postId'
+    | '/$accountId/organizations'
   id:
     | '__root__'
     | '/'
     | '/login'
     | '/_dashboard/$accountId'
     | '/_dashboard/$accountId/apis'
-    | '/_dashboard/$accountId/organizations'
     | '/_dashboard/$accountId/posts'
     | '/_dashboard/$accountId/apis/$apiId'
     | '/_dashboard/$accountId/organizations/create'
     | '/_dashboard/$accountId/posts/$postId'
+    | '/_dashboard/$accountId/organizations/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -175,18 +175,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAccountIdPostsRouteImport
       parentRoute: typeof DashboardAccountIdRoute
     }
-    '/_dashboard/$accountId/organizations': {
-      id: '/_dashboard/$accountId/organizations'
-      path: '/organizations'
-      fullPath: '/$accountId/organizations'
-      preLoaderRoute: typeof DashboardAccountIdOrganizationsRouteImport
-      parentRoute: typeof DashboardAccountIdRoute
-    }
     '/_dashboard/$accountId/apis': {
       id: '/_dashboard/$accountId/apis'
       path: '/apis'
       fullPath: '/$accountId/apis'
       preLoaderRoute: typeof DashboardAccountIdApisRouteImport
+      parentRoute: typeof DashboardAccountIdRoute
+    }
+    '/_dashboard/$accountId/organizations/': {
+      id: '/_dashboard/$accountId/organizations/'
+      path: '/organizations'
+      fullPath: '/$accountId/organizations'
+      preLoaderRoute: typeof DashboardAccountIdOrganizationsIndexRouteImport
       parentRoute: typeof DashboardAccountIdRoute
     }
     '/_dashboard/$accountId/posts/$postId': {
@@ -198,10 +198,10 @@ declare module '@tanstack/react-router' {
     }
     '/_dashboard/$accountId/organizations/create': {
       id: '/_dashboard/$accountId/organizations/create'
-      path: '/create'
+      path: '/organizations/create'
       fullPath: '/$accountId/organizations/create'
       preLoaderRoute: typeof DashboardAccountIdOrganizationsCreateRouteImport
-      parentRoute: typeof DashboardAccountIdOrganizationsRoute
+      parentRoute: typeof DashboardAccountIdRoute
     }
     '/_dashboard/$accountId/apis/$apiId': {
       id: '/_dashboard/$accountId/apis/$apiId'
@@ -227,21 +227,6 @@ const DashboardAccountIdApisRouteWithChildren =
     DashboardAccountIdApisRouteChildren,
   )
 
-interface DashboardAccountIdOrganizationsRouteChildren {
-  DashboardAccountIdOrganizationsCreateRoute: typeof DashboardAccountIdOrganizationsCreateRoute
-}
-
-const DashboardAccountIdOrganizationsRouteChildren: DashboardAccountIdOrganizationsRouteChildren =
-  {
-    DashboardAccountIdOrganizationsCreateRoute:
-      DashboardAccountIdOrganizationsCreateRoute,
-  }
-
-const DashboardAccountIdOrganizationsRouteWithChildren =
-  DashboardAccountIdOrganizationsRoute._addFileChildren(
-    DashboardAccountIdOrganizationsRouteChildren,
-  )
-
 interface DashboardAccountIdPostsRouteChildren {
   DashboardAccountIdPostsPostIdRoute: typeof DashboardAccountIdPostsPostIdRoute
 }
@@ -258,15 +243,18 @@ const DashboardAccountIdPostsRouteWithChildren =
 
 interface DashboardAccountIdRouteChildren {
   DashboardAccountIdApisRoute: typeof DashboardAccountIdApisRouteWithChildren
-  DashboardAccountIdOrganizationsRoute: typeof DashboardAccountIdOrganizationsRouteWithChildren
   DashboardAccountIdPostsRoute: typeof DashboardAccountIdPostsRouteWithChildren
+  DashboardAccountIdOrganizationsCreateRoute: typeof DashboardAccountIdOrganizationsCreateRoute
+  DashboardAccountIdOrganizationsIndexRoute: typeof DashboardAccountIdOrganizationsIndexRoute
 }
 
 const DashboardAccountIdRouteChildren: DashboardAccountIdRouteChildren = {
   DashboardAccountIdApisRoute: DashboardAccountIdApisRouteWithChildren,
-  DashboardAccountIdOrganizationsRoute:
-    DashboardAccountIdOrganizationsRouteWithChildren,
   DashboardAccountIdPostsRoute: DashboardAccountIdPostsRouteWithChildren,
+  DashboardAccountIdOrganizationsCreateRoute:
+    DashboardAccountIdOrganizationsCreateRoute,
+  DashboardAccountIdOrganizationsIndexRoute:
+    DashboardAccountIdOrganizationsIndexRoute,
 }
 
 const DashboardAccountIdRouteWithChildren =

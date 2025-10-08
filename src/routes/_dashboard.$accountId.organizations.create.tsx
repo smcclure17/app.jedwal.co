@@ -1,6 +1,6 @@
 // src/routes/_dashboard.organizations.new.tsx
 import { useState } from 'react'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -16,6 +16,7 @@ import { X } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { Spinner } from '@/components/Spinner'
 import { createOrganization } from '@/data/fetchers'
+import { OrganizationCreateSuccessScreen } from '@/components/organizations/OrganizationCreateSuccessScreen'
 
 export const Route = createFileRoute(
   '/_dashboard/$accountId/organizations/create',
@@ -30,20 +31,20 @@ async function onCreate(data: { name: string; emails: string[] }) {
 
 function NewOrganizationPage() {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const [orgName, setOrgName] = useState('')
   const [emailInput, setEmailInput] = useState('')
   const [emails, setEmails] = useState<string[]>([])
   const [emailError, setEmailError] = useState('')
+  const [createSuccess, setCreateSuccess] = useState(false)
   const { user, error, isLoading } = useAuth()
 
   const createMutation = useMutation({
     mutationFn: onCreate,
     onSuccess: () => {
-      // Navigate to the new organization or organizations list
-      navigate({
-        to: '/$accountId/organizations',
-        params: { accountId: 'abc' },
-      })
+      queryClient.invalidateQueries({ queryKey: ['defaultUser'] })
+      setCreateSuccess(true)
+      // invalidate user query
     },
     onError: () => {
       alert('Failed to create new organization. Please try again later')
@@ -135,6 +136,10 @@ function NewOrganizationPage() {
         <span>Something went wrong</span>
       </div>
     )
+  }
+
+  if (createSuccess) {
+    return <OrganizationCreateSuccessScreen orgName={orgName} />
   }
 
   return (
