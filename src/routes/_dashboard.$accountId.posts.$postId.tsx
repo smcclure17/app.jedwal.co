@@ -27,7 +27,7 @@ function PostLayout() {
     initialData: [],
   })
 
-  const post = posts.find((p) => p.doc_api_name === postId)
+  const post = posts?.find((p) => p.doc_api_name === postId)
 
   if (isLoading || !post) {
     return <PostLayoutSkeleton />
