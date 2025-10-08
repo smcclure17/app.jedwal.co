@@ -16,6 +16,9 @@ import { PostAnalyticsChart } from '@/components/posts/PostAnalyticsChart'
 import { PostLayoutSkeleton } from '@/components/posts/PostLayoutSkeleton'
 
 export const Route = createFileRoute('/_dashboard/$accountId/posts/$postId')({
+  head: ({ params }) => ({
+    meta: [{ title: `Jedwal -- ${params.postId}` }],
+  }),
   component: PostLayout,
 })
 

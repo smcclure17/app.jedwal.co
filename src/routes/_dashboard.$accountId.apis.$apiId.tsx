@@ -12,6 +12,9 @@ import { ApiCopyableSnippet } from '@/components/apis/ApiCopyableSnippet'
 import { CacheInput } from '@/components/apis/ApiUpdateCadence'
 
 export const Route = createFileRoute('/_dashboard/$accountId/apis/$apiId')({
+  head: ({ params }) => ({
+    meta: [{ title: `Jedwal -- ${params.apiId}` }],
+  }),
   component: PostLayout,
 })
 

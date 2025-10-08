@@ -13,6 +13,9 @@ import { fetchUserData } from '@/data/fetchers'
 import { OrganizationPreviewCard } from '@/components/organizations/OrganizationPreviewCard'
 
 export const Route = createFileRoute('/_dashboard/$accountId/organizations/')({
+  head: () => ({
+    meta: [{ title: `Jedwal -- Organizations` }],
+  }),
   component: OrganizationsListPage,
 })
 

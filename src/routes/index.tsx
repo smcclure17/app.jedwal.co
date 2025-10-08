@@ -6,6 +6,9 @@ import { Spinner } from '@/components/Spinner'
 import { NotLoggedInScreen } from '@/components/NotLoggedInScreen'
 
 export const Route = createFileRoute('/')({
+  head: () => ({
+    meta: [{ title: 'Jedwal -- Home' }],
+  }),
   component: App,
 })
 

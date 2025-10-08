@@ -9,6 +9,9 @@ import { OrganizationForm } from '@/components/organizations/OrganizationForm'
 export const Route = createFileRoute(
   '/_dashboard/$accountId/organizations/create',
 )({
+  head: () => ({
+    meta: [{ title: `Jedwal -- Create Organization` }],
+  }),
   component: NewOrganizationPage,
 })
 

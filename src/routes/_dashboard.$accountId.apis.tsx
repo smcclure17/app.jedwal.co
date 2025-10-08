@@ -7,6 +7,9 @@ import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, Outlet, useParams } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_dashboard/$accountId/apis')({
+  head: () => ({
+    meta: [{ title: 'Jedwal -- APIs' }],
+  }),
   component: PostsLayout,
 })
 
