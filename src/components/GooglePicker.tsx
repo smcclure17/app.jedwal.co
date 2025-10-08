@@ -2,7 +2,11 @@ import { useGooglePickerToken } from '@/hooks/data'
 import { useEffect, useRef, useState } from 'react'
 import { Button } from './ui/button'
 import { Spinner } from '@/components/Spinner'
-import '@googleworkspace/drive-picker-element'
+
+// Only import on client-side to avoid SSR issues
+if (typeof window !== 'undefined') {
+  import('@googleworkspace/drive-picker-element')
+}
 
 const events = [
   'picker:oauth:error',
