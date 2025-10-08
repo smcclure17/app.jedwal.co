@@ -7,7 +7,7 @@ import {
   BreadcrumbPage,
 } from '@/components/ui/breadcrumb'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useAuth } from '@/contexts/authContext'
+import { useAuth } from '@/contexts/AuthContext'
 import { useParams, useRouterState, Link } from '@tanstack/react-router'
 
 /**

@@ -13,7 +13,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { X } from 'lucide-react'
-import { useAuth } from '@/contexts/authContext'
+import { useAuth } from '@/contexts/AuthContext'
 import { Spinner } from '@/components/Spinner'
 import { createOrganization } from '@/data/fetchers'
 

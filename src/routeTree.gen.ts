@@ -11,14 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as DemoTanstackQueryRouteImport } from './routes/demo.tanstack-query'
-import { Route as DemoTableRouteImport } from './routes/demo.table'
-import { Route as ApiDemoTqTodosRouteImport } from './routes/api.demo-tq-todos'
-import { Route as ApiDemoNamesRouteImport } from './routes/api.demo-names'
 import { Route as DashboardAccountIdRouteImport } from './routes/_dashboard.$accountId'
-import { Route as DemoStartServerFuncsRouteImport } from './routes/demo.start.server-funcs'
-import { Route as DemoStartApiRequestRouteImport } from './routes/demo.start.api-request'
-import { Route as DemoSentryTestingRouteImport } from './routes/demo.sentry.testing'
 import { Route as DashboardAccountIdPostsRouteImport } from './routes/_dashboard.$accountId.posts'
 import { Route as DashboardAccountIdOrganizationsRouteImport } from './routes/_dashboard.$accountId.organizations'
 import { Route as DashboardAccountIdApisRouteImport } from './routes/_dashboard.$accountId.apis'
@@ -36,44 +29,9 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DemoTanstackQueryRoute = DemoTanstackQueryRouteImport.update({
-  id: '/demo/tanstack-query',
-  path: '/demo/tanstack-query',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DemoTableRoute = DemoTableRouteImport.update({
-  id: '/demo/table',
-  path: '/demo/table',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiDemoTqTodosRoute = ApiDemoTqTodosRouteImport.update({
-  id: '/api/demo-tq-todos',
-  path: '/api/demo-tq-todos',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiDemoNamesRoute = ApiDemoNamesRouteImport.update({
-  id: '/api/demo-names',
-  path: '/api/demo-names',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const DashboardAccountIdRoute = DashboardAccountIdRouteImport.update({
   id: '/_dashboard/$accountId',
   path: '/$accountId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DemoStartServerFuncsRoute = DemoStartServerFuncsRouteImport.update({
-  id: '/demo/start/server-funcs',
-  path: '/demo/start/server-funcs',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DemoStartApiRequestRoute = DemoStartApiRequestRouteImport.update({
-  id: '/demo/start/api-request',
-  path: '/demo/start/api-request',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DemoSentryTestingRoute = DemoSentryTestingRouteImport.update({
-  id: '/demo/sentry/testing',
-  path: '/demo/sentry/testing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardAccountIdPostsRoute = DashboardAccountIdPostsRouteImport.update({
@@ -115,16 +73,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/$accountId': typeof DashboardAccountIdRouteWithChildren
-  '/api/demo-names': typeof ApiDemoNamesRoute
-  '/api/demo-tq-todos': typeof ApiDemoTqTodosRoute
-  '/demo/table': typeof DemoTableRoute
-  '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/$accountId/apis': typeof DashboardAccountIdApisRouteWithChildren
   '/$accountId/organizations': typeof DashboardAccountIdOrganizationsRouteWithChildren
   '/$accountId/posts': typeof DashboardAccountIdPostsRouteWithChildren
-  '/demo/sentry/testing': typeof DemoSentryTestingRoute
-  '/demo/start/api-request': typeof DemoStartApiRequestRoute
-  '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
   '/$accountId/apis/$apiId': typeof DashboardAccountIdApisApiIdRoute
   '/$accountId/organizations/create': typeof DashboardAccountIdOrganizationsCreateRoute
   '/$accountId/posts/$postId': typeof DashboardAccountIdPostsPostIdRoute
@@ -133,16 +84,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/$accountId': typeof DashboardAccountIdRouteWithChildren
-  '/api/demo-names': typeof ApiDemoNamesRoute
-  '/api/demo-tq-todos': typeof ApiDemoTqTodosRoute
-  '/demo/table': typeof DemoTableRoute
-  '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/$accountId/apis': typeof DashboardAccountIdApisRouteWithChildren
   '/$accountId/organizations': typeof DashboardAccountIdOrganizationsRouteWithChildren
   '/$accountId/posts': typeof DashboardAccountIdPostsRouteWithChildren
-  '/demo/sentry/testing': typeof DemoSentryTestingRoute
-  '/demo/start/api-request': typeof DemoStartApiRequestRoute
-  '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
   '/$accountId/apis/$apiId': typeof DashboardAccountIdApisApiIdRoute
   '/$accountId/organizations/create': typeof DashboardAccountIdOrganizationsCreateRoute
   '/$accountId/posts/$postId': typeof DashboardAccountIdPostsPostIdRoute
@@ -152,16 +96,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/_dashboard/$accountId': typeof DashboardAccountIdRouteWithChildren
-  '/api/demo-names': typeof ApiDemoNamesRoute
-  '/api/demo-tq-todos': typeof ApiDemoTqTodosRoute
-  '/demo/table': typeof DemoTableRoute
-  '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/_dashboard/$accountId/apis': typeof DashboardAccountIdApisRouteWithChildren
   '/_dashboard/$accountId/organizations': typeof DashboardAccountIdOrganizationsRouteWithChildren
   '/_dashboard/$accountId/posts': typeof DashboardAccountIdPostsRouteWithChildren
-  '/demo/sentry/testing': typeof DemoSentryTestingRoute
-  '/demo/start/api-request': typeof DemoStartApiRequestRoute
-  '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
   '/_dashboard/$accountId/apis/$apiId': typeof DashboardAccountIdApisApiIdRoute
   '/_dashboard/$accountId/organizations/create': typeof DashboardAccountIdOrganizationsCreateRoute
   '/_dashboard/$accountId/posts/$postId': typeof DashboardAccountIdPostsPostIdRoute
@@ -172,16 +109,9 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/$accountId'
-    | '/api/demo-names'
-    | '/api/demo-tq-todos'
-    | '/demo/table'
-    | '/demo/tanstack-query'
     | '/$accountId/apis'
     | '/$accountId/organizations'
     | '/$accountId/posts'
-    | '/demo/sentry/testing'
-    | '/demo/start/api-request'
-    | '/demo/start/server-funcs'
     | '/$accountId/apis/$apiId'
     | '/$accountId/organizations/create'
     | '/$accountId/posts/$postId'
@@ -190,16 +120,9 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/$accountId'
-    | '/api/demo-names'
-    | '/api/demo-tq-todos'
-    | '/demo/table'
-    | '/demo/tanstack-query'
     | '/$accountId/apis'
     | '/$accountId/organizations'
     | '/$accountId/posts'
-    | '/demo/sentry/testing'
-    | '/demo/start/api-request'
-    | '/demo/start/server-funcs'
     | '/$accountId/apis/$apiId'
     | '/$accountId/organizations/create'
     | '/$accountId/posts/$postId'
@@ -208,16 +131,9 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/_dashboard/$accountId'
-    | '/api/demo-names'
-    | '/api/demo-tq-todos'
-    | '/demo/table'
-    | '/demo/tanstack-query'
     | '/_dashboard/$accountId/apis'
     | '/_dashboard/$accountId/organizations'
     | '/_dashboard/$accountId/posts'
-    | '/demo/sentry/testing'
-    | '/demo/start/api-request'
-    | '/demo/start/server-funcs'
     | '/_dashboard/$accountId/apis/$apiId'
     | '/_dashboard/$accountId/organizations/create'
     | '/_dashboard/$accountId/posts/$postId'
@@ -227,13 +143,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
   DashboardAccountIdRoute: typeof DashboardAccountIdRouteWithChildren
-  ApiDemoNamesRoute: typeof ApiDemoNamesRoute
-  ApiDemoTqTodosRoute: typeof ApiDemoTqTodosRoute
-  DemoTableRoute: typeof DemoTableRoute
-  DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute
-  DemoSentryTestingRoute: typeof DemoSentryTestingRoute
-  DemoStartApiRequestRoute: typeof DemoStartApiRequestRoute
-  DemoStartServerFuncsRoute: typeof DemoStartServerFuncsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -252,60 +161,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/demo/tanstack-query': {
-      id: '/demo/tanstack-query'
-      path: '/demo/tanstack-query'
-      fullPath: '/demo/tanstack-query'
-      preLoaderRoute: typeof DemoTanstackQueryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo/table': {
-      id: '/demo/table'
-      path: '/demo/table'
-      fullPath: '/demo/table'
-      preLoaderRoute: typeof DemoTableRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/demo-tq-todos': {
-      id: '/api/demo-tq-todos'
-      path: '/api/demo-tq-todos'
-      fullPath: '/api/demo-tq-todos'
-      preLoaderRoute: typeof ApiDemoTqTodosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/demo-names': {
-      id: '/api/demo-names'
-      path: '/api/demo-names'
-      fullPath: '/api/demo-names'
-      preLoaderRoute: typeof ApiDemoNamesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_dashboard/$accountId': {
       id: '/_dashboard/$accountId'
       path: '/$accountId'
       fullPath: '/$accountId'
       preLoaderRoute: typeof DashboardAccountIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo/start/server-funcs': {
-      id: '/demo/start/server-funcs'
-      path: '/demo/start/server-funcs'
-      fullPath: '/demo/start/server-funcs'
-      preLoaderRoute: typeof DemoStartServerFuncsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo/start/api-request': {
-      id: '/demo/start/api-request'
-      path: '/demo/start/api-request'
-      fullPath: '/demo/start/api-request'
-      preLoaderRoute: typeof DemoStartApiRequestRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo/sentry/testing': {
-      id: '/demo/sentry/testing'
-      path: '/demo/sentry/testing'
-      fullPath: '/demo/sentry/testing'
-      preLoaderRoute: typeof DemoSentryTestingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_dashboard/$accountId/posts': {
@@ -416,13 +276,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
   DashboardAccountIdRoute: DashboardAccountIdRouteWithChildren,
-  ApiDemoNamesRoute: ApiDemoNamesRoute,
-  ApiDemoTqTodosRoute: ApiDemoTqTodosRoute,
-  DemoTableRoute: DemoTableRoute,
-  DemoTanstackQueryRoute: DemoTanstackQueryRoute,
-  DemoSentryTestingRoute: DemoSentryTestingRoute,
-  DemoStartApiRequestRoute: DemoStartApiRequestRoute,
-  DemoStartServerFuncsRoute: DemoStartServerFuncsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
