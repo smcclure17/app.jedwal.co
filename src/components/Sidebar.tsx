@@ -9,6 +9,7 @@ import {
   Sparkles,
   CreditCard,
   LogOut,
+  Building2,
 } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { fetchUserData } from '@/data/fetchers'
@@ -215,6 +216,19 @@ export function Sidebar() {
                     )}
                   </button>
                 ))}
+
+                {/* Manage Organizations Link */}
+                <div className="border-t mt-1 pt-1">
+                  <Link
+                    to="/$accountId/organizations"
+                    params={{ accountId: individualUser?.id ?? '' }}
+                    onClick={() => setIsAccountMenuOpen(false)}
+                    className="w-full flex items-center gap-2 px-2 py-2 hover:bg-accent text-left transition-colors text-sm"
+                  >
+                    <Building2 className="h-4 w-4" />
+                    Manage Organizations
+                  </Link>
+                </div>
               </div>
             )}
           </div>
