@@ -14,7 +14,7 @@ export const LogoLink = ({
     <a href="https://jedwal.co">
       <div className="flex flex-row space-x-1 w-fit">
         <Image
-          src="/images/logo-cropped.svg"
+          src="/logo-cropped.svg"
           height={height}
           width={width}
           alt="logo with stars"

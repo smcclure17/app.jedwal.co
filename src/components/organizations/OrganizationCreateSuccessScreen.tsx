@@ -11,7 +11,7 @@ export const OrganizationCreateSuccessScreen = ({
   return (
     <div className="flex flex-col items-center justify-center h-screen space-y-2 pb-32">
       <Image
-        src="/images/logo-cropped.svg"
+        src="/logo-cropped.svg"
         width={120}
         height={120}
         alt="Jedwal logo"
