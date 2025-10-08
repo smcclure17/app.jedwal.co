@@ -2,10 +2,10 @@ import { updatePostSlug } from '@/data/fetchers'
 import { PostMetadata } from '@/schemas'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
-import { Input } from './ui/input'
-import { Button } from './ui/button'
-import { Checkmark } from './Checkmark'
-import { Spinner } from './Spinner'
+import { Input } from '../ui/input'
+import { Button } from '../ui/button'
+import { Checkmark } from '../Checkmark'
+import { Spinner } from '../Spinner'
 
 export interface PostSlugProps {
   accountId: string

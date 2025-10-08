@@ -1,5 +1,5 @@
 import { Separator } from '@radix-ui/react-separator'
-import { DashboardSection } from './DashboardSection'
+import { DashboardSection } from '../DashboardSection'
 
 export function PostLayoutSkeleton() {
   return (

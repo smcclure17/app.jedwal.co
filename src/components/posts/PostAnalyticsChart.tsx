@@ -1,5 +1,5 @@
 import { getApiAnalytics as fetchApiAnalytics } from '@/data/fetchers'
-import { AnalyticsChartInternals } from './AnalyticsChartInternals'
+import { AnalyticsChartInternals } from '../AnalyticsChartInternals'
 import { useQuery } from '@tanstack/react-query'
 
 export interface PostAnalyticsChartProps {

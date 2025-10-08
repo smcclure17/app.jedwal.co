@@ -2,11 +2,11 @@ import { addPostCategory, removePostCategory } from '@/data/fetchers'
 import { PostMetadata } from '@/schemas'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
-import { Input } from './ui/input'
-import { Button } from './ui/button'
-import { Badge } from './ui/badge'
-import { Spinner } from './Spinner'
-import { Checkmark } from './Checkmark'
+import { Input } from '../ui/input'
+import { Button } from '../ui/button'
+import { Badge } from '../ui/badge'
+import { Spinner } from '../Spinner'
+import { Checkmark } from '../Checkmark'
 
 export interface PostCategoriesProps {
   accountId: string

@@ -1,4 +1,4 @@
-import { CreatePostForm } from './CreatePostForm'
+import { CreatePostForm } from './posts/CreatePostForm'
 
 export interface FirstApiSplashProps {
   accountId: string

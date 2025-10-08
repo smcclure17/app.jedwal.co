@@ -1,7 +1,7 @@
 // src/routes/_dashboard.$accountId.posts.tsx
-import { CreatePostForm } from '@/components/CreatePostForm'
+import { CreatePostForm } from '@/components/posts/CreatePostForm'
 import { FirstDocSplash } from '@/components/FirstDocSplash'
-import { PostsList } from '@/components/PostsList'
+import { PostsList } from '@/components/posts/PostsList'
 import { fetchPosts } from '@/data/fetchers'
 import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, Outlet, useParams } from '@tanstack/react-router'

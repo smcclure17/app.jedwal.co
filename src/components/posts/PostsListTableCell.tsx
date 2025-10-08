@@ -1,5 +1,5 @@
 import { PostMetadata } from '@/schemas'
-import { Badge } from './ui/badge'
+import { Badge } from '../ui/badge'
 
 export function PostsListTableCell({ row }: { row: PostMetadata }) {
   return (

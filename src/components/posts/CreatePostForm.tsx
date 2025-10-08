@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Input } from './ui/input'
+import { Input } from '../ui/input'
 import { GooglePicker } from '@/components/GooglePicker'
 import { createPost } from '@/data/fetchers'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
