@@ -11,8 +11,7 @@ import {
   LogOut,
   Building2,
 } from 'lucide-react'
-import { useQuery } from '@tanstack/react-query'
-import { fetchUserData } from '@/data/fetchers'
+import { useUserData } from '@/hooks/use-user'
 import { Badge } from './ui/badge'
 import config from '@/config'
 import { LogoLink } from './LogoLink'
@@ -20,11 +19,7 @@ import { LogoLink } from './LogoLink'
 export function Sidebar() {
   const { user, error } = useAuth()
 
-  const { data: individualUser, isLoading } = useQuery({
-    queryKey: ['defaultUser'],
-    queryFn: () => fetchUserData(),
-    retry: false, // don't loop endlessly if unauthenticated
-  })
+  const { data: individualUser, isLoading } = useUserData()
 
   const { accountId } = useParams({ strict: false })
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false)

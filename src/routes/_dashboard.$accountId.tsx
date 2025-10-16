@@ -4,8 +4,7 @@ import { NotFoundScreen } from '@/components/NotFoundScreen'
 import { Sidebar } from '@/components/Sidebar'
 import { Spinner } from '@/components/Spinner'
 import { AuthProvider } from '@/contexts/AuthContext'
-import { fetchUserData } from '@/data/fetchers'
-import { useQuery } from '@tanstack/react-query'
+import { useUserData } from '@/hooks/use-user'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 
 // src/routes/_dashboard.$accountId.tsx
@@ -16,11 +15,7 @@ export const Route = createFileRoute('/_dashboard/$accountId')({
 function AccountLayout() {
   const { accountId } = Route.useParams()
 
-  const { data: user, isLoading } = useQuery({
-    queryKey: ['defaultUser'],
-    queryFn: () => fetchUserData(),
-    retry: false,
-  })
+  const { data: user, isLoading } = useUserData()
 
   if (isLoading) {
     return (

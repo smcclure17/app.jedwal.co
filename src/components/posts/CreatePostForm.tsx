@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { Input } from '../ui/input'
 import { GooglePicker } from '@/components/GooglePicker'
-import { createPost } from '@/data/fetchers'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useCreatePost } from '@/hooks/use-posts'
 import { useNavigate } from '@tanstack/react-router'
 import { extractGoogleResourceId } from '@/lib/utils'
 
@@ -19,20 +18,23 @@ export const CreatePostForm = ({
 }: CreateApiFormProps) => {
   const [sheetUrl, setSheetUrl] = useState('')
   const [sheetId, setSheetId] = useState('') // just the extracted ID
-  const queryClient = useQueryClient()
   const navigate = useNavigate()
 
-  const mutation = useMutation({
-    mutationFn: (googleId: string) => createPost(googleId, accountId),
-    onSuccess: (data) => {
-      setSheetUrl('')
-      queryClient.invalidateQueries({ queryKey: ['posts', accountId] })
-      navigate({
-        to: '/$accountId/posts/$postId',
-        params: { accountId, postId: data.post_id },
-      })
-    },
-  })
+  const mutation = useCreatePost(accountId)
+
+  const handleSuccess = (data: { post_id: string }) => {
+    setSheetUrl('')
+    navigate({
+      to: '/$accountId/posts/$postId',
+      params: { accountId, postId: data.post_id },
+    })
+  }
+
+  const mutateWithCallback = async (googleId: string) => {
+    const data = await mutation.mutateAsync(googleId)
+    handleSuccess(data)
+    return data
+  }
 
   return (
     <div>
@@ -66,7 +68,7 @@ export const CreatePostForm = ({
             accountId={accountId}
             fileId={sheetId}
             disabled={disabled || mutation.isPending}
-            fetcher={(fileId) => mutation.mutateAsync(fileId)}
+            fetcher={mutateWithCallback}
           />
         </div>
       </form>

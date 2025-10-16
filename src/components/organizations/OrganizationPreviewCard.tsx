@@ -2,26 +2,12 @@ import { Link } from '@tanstack/react-router'
 import { Card, CardDescription, CardHeader, CardTitle } from '../ui/card'
 import { Button } from '../ui/button'
 import { Loader2, Trash2 } from 'lucide-react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useDeleteOrganization } from '@/hooks/use-organizations'
 import { useState } from 'react'
-import { deleteOrganization } from '@/data/fetchers'
 
 export function OrganizationPreviewCard({ org }: { org: any }) {
-  const queryClient = useQueryClient()
-
   const [deletingOrgId, setDeletingOrgId] = useState<string | null>(null)
-
-  const deleteMutation = useMutation({
-    mutationFn: deleteOrganization,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['defaultUser'] })
-      setDeletingOrgId(null)
-    },
-    onError: () => {
-      alert('Failed to delete organization. Please try again later.')
-      setDeletingOrgId(null)
-    },
-  })
+  const deleteMutation = useDeleteOrganization()
 
   const handleDeleteClick = (org: any, e: React.MouseEvent) => {
     e.preventDefault()
@@ -33,7 +19,15 @@ export function OrganizationPreviewCard({ org }: { org: any }) {
 
     if (isConfirmed) {
       setDeletingOrgId(org.account_id)
-      deleteMutation.mutate(org.account_id)
+      deleteMutation.mutate(org.account_id, {
+        onSuccess: () => {
+          setDeletingOrgId(null)
+        },
+        onError: () => {
+          alert('Failed to delete organization. Please try again later.')
+          setDeletingOrgId(null)
+        },
+      })
     }
   }
 

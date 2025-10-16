@@ -1,5 +1,4 @@
-import { postTtlUpdate } from '@/data/fetchers'
-import { useMutation } from '@tanstack/react-query'
+import { useUpdateApiTtl } from '@/hooks/use-apis'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { TimePickerInput } from './TimePickerInternal'
 import { Spinner } from '../Spinner'
@@ -42,16 +41,7 @@ export const CacheInput = ({
   const minutesRef = useRef<HTMLInputElement>(null)
   const secondsRef = useRef<HTMLInputElement>(null)
 
-  const mutation = useMutation({
-    mutationFn: (ttl: number) => postTtlUpdate(accountId, name, ttl),
-    onSuccess: () => {
-      setShowSuccess(true)
-    },
-    onError: () => {
-      alert('Failed to update cache duration')
-      setTimeValue(secondsToDate(defaultTtl))
-    },
-  })
+  const mutation = useUpdateApiTtl(accountId, name)
 
   useEffect(() => {
     if (showSuccess) {
@@ -67,7 +57,15 @@ export const CacheInput = ({
   const handleUpdate = () => {
     if (timeValue) {
       const newTtl = dateToSeconds(timeValue)
-      mutation.mutate(newTtl)
+      mutation.mutate(newTtl, {
+        onSuccess: () => {
+          setShowSuccess(true)
+        },
+        onError: () => {
+          alert('Failed to update cache duration')
+          setTimeValue(secondsToDate(defaultTtl))
+        },
+      })
     }
   }
 

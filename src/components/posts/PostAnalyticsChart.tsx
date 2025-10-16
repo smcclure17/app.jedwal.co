@@ -1,6 +1,5 @@
-import { getApiAnalytics as fetchApiAnalytics } from '@/data/fetchers'
+import { useApiAnalytics } from '@/hooks/use-apis'
 import { AnalyticsChartInternals } from '../AnalyticsChartInternals'
-import { useQuery } from '@tanstack/react-query'
 
 export interface PostAnalyticsChartProps {
   accountId: string
@@ -11,11 +10,7 @@ export function PostAnalyticsChart({
   accountId,
   postId,
 }: PostAnalyticsChartProps) {
-  const { data: analyticRows, isLoading } = useQuery({
-    queryKey: ['analytics', accountId, postId],
-    queryFn: () => fetchApiAnalytics(accountId, postId),
-    initialData: null,
-  })
+  const { data: analyticRows, isLoading } = useApiAnalytics(accountId, postId)
 
   if (isLoading || analyticRows === null) return <></>
   return (

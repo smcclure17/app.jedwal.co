@@ -1,6 +1,5 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useQuery } from '@tanstack/react-query'
-import { fetchUserData } from '@/data/fetchers'
+import { useUserData } from '@/hooks/use-user'
 import { useEffect } from 'react'
 import { Spinner } from '@/components/Spinner'
 import { NotLoggedInScreen } from '@/components/NotLoggedInScreen'
@@ -14,11 +13,7 @@ export const Route = createFileRoute('/')({
 
 function App() {
   const navigate = useNavigate()
-  const { data: user, isLoading } = useQuery({
-    queryKey: ['defaultUser'],
-    queryFn: () => fetchUserData(),
-    retry: false, // don’t loop endlessly if unauthenticated
-  })
+  const { data: user, isLoading } = useUserData()
 
   useEffect(() => {
     if (isLoading) return

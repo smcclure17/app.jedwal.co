@@ -19,7 +19,7 @@ export const OrganizationCreateSuccessScreen = ({
       />
 
       <h2 className={`text-2xl text-[#005430] text-center font-accent`}>
-        Success! You're organization has been created
+        Success! Your organization has been created
       </h2>
 
       <div className="flex flex-col space-y-6 items-center">

@@ -2,8 +2,7 @@
 import { CreatePostForm } from '@/components/posts/CreatePostForm'
 import { FirstDocSplash } from '@/components/FirstDocSplash'
 import { PostsList } from '@/components/posts/PostsList'
-import { fetchPosts } from '@/data/fetchers'
-import { useQuery } from '@tanstack/react-query'
+import { usePosts } from '@/hooks/use-posts'
 import { createFileRoute, Outlet, useParams } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_dashboard/$accountId/posts')({
@@ -17,11 +16,7 @@ function PostsLayout() {
   const { accountId } = Route.useParams()
   const { postId } = useParams({ strict: false }) // might exist
 
-  const { data: posts } = useQuery({
-    queryKey: ['posts', accountId],
-    queryFn: () => fetchPosts(accountId),
-    initialData: null,
-  })
+  const { data: posts } = usePosts(accountId)
 
   if (posts && posts.length === 0) {
     return (

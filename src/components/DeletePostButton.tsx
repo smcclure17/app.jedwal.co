@@ -1,6 +1,5 @@
-import { deletePost } from '@/data/fetchers'
+import { useDeletePost } from '@/hooks/use-posts'
 import { useNavigate } from '@tanstack/react-router'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export interface DeleteDocApiButtonProps {
   accountId: string
@@ -12,18 +11,7 @@ export const DeletePostButton = ({
   accountId,
 }: DeleteDocApiButtonProps) => {
   const navigate = useNavigate()
-  const queryClient = useQueryClient()
-
-  const mutation = useMutation({
-    mutationFn: () => deletePost(accountId, postId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['posts', accountId] })
-      navigate({ to: '/$accountId/posts', params: { accountId } })
-    },
-    onError: () => {
-      alert('Failed to delete API. Please try again later.')
-    },
-  })
+  const mutation = useDeletePost(accountId)
 
   const handleDeleteApi = () => {
     const isConfirmed = confirm(
@@ -31,7 +19,14 @@ export const DeletePostButton = ({
     )
 
     if (isConfirmed) {
-      mutation.mutate()
+      mutation.mutate(postId, {
+        onSuccess: () => {
+          navigate({ to: '/$accountId/posts', params: { accountId } })
+        },
+        onError: () => {
+          alert('Failed to delete API. Please try again later.')
+        },
+      })
     }
   }
 

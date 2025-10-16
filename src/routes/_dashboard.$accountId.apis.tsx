@@ -2,8 +2,7 @@
 import { ApisList } from '@/components/apis/ApisList'
 import { CreateApiForm } from '@/components/apis/CreateApiForm'
 import { FirstApiSplash } from '@/components/apis/FirstApiSplash'
-import { fetchApis } from '@/data/fetchers'
-import { useQuery } from '@tanstack/react-query'
+import { useApis } from '@/hooks/use-apis'
 import { createFileRoute, Outlet, useParams } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_dashboard/$accountId/apis')({
@@ -17,11 +16,7 @@ function PostsLayout() {
   const { accountId } = Route.useParams()
   const { apiId } = useParams({ strict: false }) // might exist
 
-  const { data: posts } = useQuery({
-    queryKey: ['apis', accountId],
-    queryFn: () => fetchApis(accountId),
-    initialData: { results: [], failures: [] },
-  })
+  const { data: posts } = useApis(accountId)
 
   if (posts && posts.results.length === 0) {
     return (
@@ -40,7 +35,7 @@ function PostsLayout() {
             <ApisList
               accountId={accountId}
               selectedPostId={apiId}
-              posts={posts}
+              posts={posts ?? { results: [], failures: [] }}
             />
           </div>
           <div className="w-0.25 bg-gray-300" />

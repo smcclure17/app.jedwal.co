@@ -1,5 +1,5 @@
 // src/routes/_dashboard.organizations.index.tsx
-import { useQuery } from '@tanstack/react-query'
+import { useUserData } from '@/hooks/use-user'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import {
   Card,
@@ -9,7 +9,6 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { fetchUserData } from '@/data/fetchers'
 import { OrganizationPreviewCard } from '@/components/organizations/OrganizationPreviewCard'
 
 export const Route = createFileRoute('/_dashboard/$accountId/organizations/')({
@@ -20,11 +19,7 @@ export const Route = createFileRoute('/_dashboard/$accountId/organizations/')({
 })
 
 function OrganizationsListPage() {
-  const { data: user, isLoading } = useQuery({
-    queryKey: ['defaultUser'],
-    queryFn: () => fetchUserData(),
-    initialData: null,
-  })
+  const { data: user, isLoading } = useUserData()
 
   if (isLoading || !user) {
     return (

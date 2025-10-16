@@ -29,7 +29,6 @@ function ApisListSkeleton() {
 }
 
 export function ApisList({ accountId, posts, selectedPostId }: PostsListProps) {
-  console.log(posts)
   if (posts.results.length === 0) {
     return (
       <div className="w-72 border-b">

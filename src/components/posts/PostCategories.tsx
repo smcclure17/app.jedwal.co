@@ -1,6 +1,4 @@
-import { addPostCategory, removePostCategory } from '@/data/fetchers'
-import { PostMetadata } from '@/schemas'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useAddPostCategory, useRemovePostCategory } from '@/hooks/use-posts'
 import { useEffect, useState } from 'react'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
@@ -21,7 +19,6 @@ export default function PostCategories({
 }: PostCategoriesProps) {
   const [cat, setCat] = useState('')
   const [showSuccess, setShowSuccess] = useState(false)
-  const queryClient = useQueryClient()
 
   const validateCategory = (category: string): string | null => {
     const trimmed = category.trim()
@@ -34,69 +31,8 @@ export default function PostCategories({
     return null
   }
 
-  const addCategoryMutation = useMutation({
-    mutationFn: (category: string) =>
-      addPostCategory(accountId, postId, category),
-    onMutate: async (newCategory) => {
-      // Cancel outgoing refetches
-      await queryClient.cancelQueries({ queryKey: ['posts', accountId] })
-      const previousPosts = queryClient.getQueryData(['posts', accountId])
-
-      // Optimistically update
-      queryClient.setQueryData(['posts', accountId], (old: PostMetadata[]) => {
-        return old.map((post) =>
-          post.doc_api_name === postId
-            ? { ...post, categories: [...(post.categories ?? []), newCategory] }
-            : post,
-        )
-      })
-
-      return { previousPosts }
-    },
-    onError: (_err, _newCategory, context) => {
-      queryClient.setQueryData(['posts', accountId], context?.previousPosts)
-      alert('Failed to add category :/')
-    },
-    onSettled: () => {
-      // Always refetch to ensure sync with server
-      queryClient.invalidateQueries({ queryKey: ['posts', accountId] })
-    },
-    onSuccess: () => {
-      setCat('')
-      setShowSuccess(true)
-    },
-  })
-
-  const removeCategoryMutation = useMutation({
-    mutationFn: (category: string) =>
-      removePostCategory(accountId, postId, category),
-    onMutate: async (categoryToRemove) => {
-      await queryClient.cancelQueries({ queryKey: ['posts', accountId] })
-      const previousPosts = queryClient.getQueryData(['posts', accountId])
-      queryClient.setQueryData(['posts', accountId], (old: PostMetadata[]) => {
-        return old.map((post) =>
-          post.doc_api_name === postId
-            ? {
-                ...post,
-                categories: (post.categories ?? []).filter(
-                  (c) => c !== categoryToRemove,
-                ),
-              }
-            : post,
-        )
-      })
-
-      return { previousPosts }
-    },
-    onError: (_err, _categoryToRemove, context) => {
-      queryClient.setQueryData(['posts', accountId], context?.previousPosts)
-      alert('Failed to remove category :/')
-    },
-    onSettled: () => {
-      // Always refetch to ensure sync with server
-      queryClient.invalidateQueries({ queryKey: ['posts', accountId] })
-    },
-  })
+  const addCategoryMutation = useAddPostCategory(accountId, postId)
+  const removeCategoryMutation = useRemovePostCategory(accountId, postId)
 
   useEffect(() => {
     if (showSuccess) {
@@ -113,11 +49,23 @@ export default function PostCategories({
       return
     }
 
-    addCategoryMutation.mutate(cat)
+    addCategoryMutation.mutate(cat, {
+      onSuccess: () => {
+        setCat('')
+        setShowSuccess(true)
+      },
+      onError: () => {
+        alert('Failed to add category :/')
+      },
+    })
   }
   const handleRemove = (cat: string) => {
     if (confirm('are u sure u want to delete')) {
-      removeCategoryMutation.mutate(cat)
+      removeCategoryMutation.mutate(cat, {
+        onError: () => {
+          alert('Failed to remove category :/')
+        },
+      })
     }
   }
 
