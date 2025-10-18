@@ -97,7 +97,7 @@ export function useRemovePostCategory(accountId: string, postId: string) {
             ? {
                 ...post,
                 categories: (post.categories ?? []).filter(
-                  (c) => c !== categoryToRemove,
+                  (c: string) => c !== categoryToRemove,
                 ),
               }
             : post,

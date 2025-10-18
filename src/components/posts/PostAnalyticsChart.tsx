@@ -12,7 +12,7 @@ export function PostAnalyticsChart({
 }: PostAnalyticsChartProps) {
   const { data: analyticRows, isLoading } = useApiAnalytics(accountId, postId)
 
-  if (isLoading || analyticRows === null) return <></>
+  if (isLoading || analyticRows === undefined) return <></>
   return (
     // TODO: this chart is very hard-coded. fix that
     <div className="rounded-md border w-[510px] bg-gray-50 text-gray-600 text-sm w-full max-w-xl">
