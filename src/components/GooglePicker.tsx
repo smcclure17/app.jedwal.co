@@ -20,13 +20,13 @@ export interface GooglePickerProps {
   onClose: () => void
   onAuth: (event: any) => void
   fileId: string
-  fetcher: (googleId: string) => Promise<any>
+  onPick: any
   token?: string
   disabled?: string
 }
 
 const GooglePickerClient = ({
-  fetcher,
+  onPick,
   isOpen,
   fileId,
   onClose,
@@ -42,9 +42,14 @@ const GooglePickerClient = ({
       if (e.type === 'picker:picked') {
         try {
           onClose()
-          await fetcher(e.detail.docs[0].id)
+          const doc = e.detail.docs[0]
+          onPick({
+            id: doc.id,
+            name: doc.name,
+            url: doc.url || `https://docs.google.com/document/d/${doc.id}`,
+          })
         } catch (error) {
-          console.error('Failed to create API:', error)
+          console.error('Failed to pick document:', error)
         }
       }
 
@@ -68,7 +73,7 @@ const GooglePickerClient = ({
         )
       }
     }
-  }, [fetcher, onAuth, onClose])
+  }, [onPick, onAuth, onClose])
 
   if (!isOpen) {
     return null
@@ -94,12 +99,12 @@ const GooglePickerClient = ({
 
 export const GooglePicker = ({
   fileId,
-  fetcher,
+  onPick,
   disabled = false,
 }: {
   accountId: string
   fileId: string
-  fetcher: (googleId: string) => Promise<any>
+  onPick: any
   disabled?: boolean
 }) => {
   const [isOpen, setIsOpen] = useState(false)
@@ -112,19 +117,19 @@ export const GooglePicker = ({
     <>
       <Button
         variant={'default'}
-        className='font-accent'
+        className="font-accent"
         onClick={handleToggle}
         disabled={disabled || fileId === ''}
       >
-        {isOpen ? <Spinner srText="Creating..." /> : 'Create'}
+        {isOpen ? <Spinner srText="Creating..." /> : 'Create New Post'}
       </Button>
       <GooglePickerClient
-        fetcher={fetcher}
         fileId={fileId}
         isOpen={isOpen}
         onClose={handleClose}
         token={accessToken}
         onAuth={handleAuth}
+        onPick={onPick}
       />
     </>
   )

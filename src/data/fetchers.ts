@@ -19,11 +19,16 @@ export async function fetchPosts(accountId: string) {
 
 export const createPost = async (
   googleId: string,
+  docApiName: string,
   accountId?: string,
 ): Promise<CreatePostResponse> => {
   const res = await fetch(`${config.api.url}/doc`, {
     method: 'POST',
-    body: JSON.stringify({ google_id: googleId, owner_id: accountId }),
+    body: JSON.stringify({
+      google_id: googleId,
+      owner_id: accountId,
+      doc_api_name: docApiName,
+    }),
     credentials: 'include',
     headers: { 'Content-type': 'application/json' },
   })

@@ -28,7 +28,7 @@ function PostsLayout() {
 
   return (
     <div>
-      <div className="flex flex-col space-y-12 mr-12 pt-4">
+      <div className="flex flex-col space-y-12 mr-12 pt-10">
         <CreatePostForm accountId={accountId} />
         <div className="flex space-x-8">
           <div className="max-w-sm ">

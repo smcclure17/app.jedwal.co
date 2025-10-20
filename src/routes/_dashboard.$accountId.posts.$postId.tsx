@@ -6,7 +6,6 @@ import { DeletePostButton } from '@/components/DeletePostButton'
 import config from '@/config'
 import PostRepublish from '@/components/posts/PostRepublish'
 import PostCategories from '@/components/posts/PostCategories'
-import PostSlugs from '@/components/posts/PostSlug'
 import { Separator } from '@/components/ui/separator'
 import { CopyableSnippet } from '@/components/CopyableSnippet'
 import { DashboardSection } from '@/components/DashboardSection'
@@ -61,13 +60,6 @@ function PostLayout() {
       </div>
       <DashboardSection title="Content Link">
         <CopyableSnippet text={postJedwalUrl} />
-      </DashboardSection>
-      <DashboardSection title="Post Slug">
-        <PostSlugs
-          accountId={accountId}
-          postId={postId}
-          initialSlug={post.slug ?? post.doc_api_name}
-        />
       </DashboardSection>
       <DashboardSection title="Categories">
         <PostCategories

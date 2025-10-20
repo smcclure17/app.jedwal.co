@@ -4,6 +4,7 @@ import { GooglePicker } from '@/components/GooglePicker'
 import { useCreatePost } from '@/hooks/use-posts'
 import { useNavigate } from '@tanstack/react-router'
 import { extractGoogleResourceId } from '@/lib/utils'
+import { CreatePostModal } from './CreatePostModal'
 
 export interface CreateApiFormProps {
   accountId: string
@@ -18,22 +19,33 @@ export const CreatePostForm = ({
 }: CreateApiFormProps) => {
   const [sheetUrl, setSheetUrl] = useState('')
   const [sheetId, setSheetId] = useState('') // just the extracted ID
+  const [selectedDoc, setSelectedDoc] = useState<{
+    id: string
+    name: string
+    url: string
+  } | null>(null)
   const navigate = useNavigate()
 
   const mutation = useCreatePost(accountId)
 
   const handleSuccess = (data: { post_id: string }) => {
     setSheetUrl('')
+    setSelectedDoc(null)
     navigate({
       to: '/$accountId/posts/$postId',
       params: { accountId, postId: data.post_id },
     })
   }
 
-  const mutateWithCallback = async (googleId: string) => {
-    const data = await mutation.mutateAsync(googleId)
+  const mutateWithCallback = async (slug: string) => {
+    if (!selectedDoc) {
+      return
+    }
+    const data = await mutation.mutateAsync({
+      googleId: selectedDoc.id,
+      slug,
+    })
     handleSuccess(data)
-    return data
   }
 
   return (
@@ -43,8 +55,9 @@ export const CreatePostForm = ({
         className="flex flex-col space-y-2"
       >
         {showLabel && (
-          <label htmlFor="create" className="text-h2">
-            Create a New Post
+          <label htmlFor="create">
+            <p className="text-h2">Create a New Post</p>
+            <p className='text-xs text-gray-700'>Paste a Google Doc URL to get started</p>
           </label>
         )}
         <div className="flex flex-row space-x-2">
@@ -68,11 +81,24 @@ export const CreatePostForm = ({
             accountId={accountId}
             fileId={sheetId}
             disabled={disabled || mutation.isPending}
-            fetcher={mutateWithCallback}
+            onPick={setSelectedDoc}
           />
         </div>
       </form>
       {mutation.isError && <p>{mutation.error.message}</p>}
+
+      {selectedDoc && (
+        <CreatePostModal
+          title={selectedDoc.name}
+          url={selectedDoc.url}
+          open={true}
+          onOpenChange={(open) => {
+            if (!open) setSelectedDoc(null)
+          }}
+          onSubmit={mutateWithCallback}
+          isLoading={mutation.isPending}
+        />
+      )}
     </div>
   )
 }
