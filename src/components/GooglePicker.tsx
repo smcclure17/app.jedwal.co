@@ -101,11 +101,13 @@ export const GooglePicker = ({
   fileId,
   onPick,
   disabled = false,
+  submitTitle = 'Create New Post',
 }: {
   accountId: string
   fileId: string
   onPick: any
   disabled?: boolean
+  submitTitle?: string
 }) => {
   const [isOpen, setIsOpen] = useState(false)
   const { accessToken, handleAuth } = useGooglePickerToken()
@@ -121,7 +123,7 @@ export const GooglePicker = ({
         onClick={handleToggle}
         disabled={disabled || fileId === ''}
       >
-        {isOpen ? <Spinner srText="Creating..." /> : 'Create New Post'}
+        {isOpen ? <Spinner srText="Creating..." /> : submitTitle}
       </Button>
       <GooglePickerClient
         fileId={fileId}

@@ -26,8 +26,8 @@ function PostLayout() {
     initialData: { results: [], failures: [] },
   })
 
-  const post = posts.results.find((p) => p.sheet_api_name === apiId)
-
+  const post = posts?.results.find((p) => p.sheet_api_name === apiId)
+  
   if (isLoading || !post) {
     return <PostLayoutSkeleton />
   }

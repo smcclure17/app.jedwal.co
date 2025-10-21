@@ -20,10 +20,10 @@ export const LogoLink = ({
           alt="logo with stars"
         ></Image>
         <div className="items-center">
-          <span className={`font-accent text-${textSize} text-[#005430]`}>
+          <span className={`font-accent text-${textSize} text-primary`}>
             Jedwal.
           </span>
-          <span className={`text-${dotCoSize} text-[#005430]`}>co</span>
+          <span className={`text-${dotCoSize} text-primary`}>co</span>
         </div>
       </div>
     </a>

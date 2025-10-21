@@ -29,7 +29,7 @@ function ApisListSkeleton() {
 }
 
 export function ApisList({ accountId, posts, selectedPostId }: PostsListProps) {
-  if (posts.results.length === 0) {
+  if (posts.results.length === 0 || !posts.results) {
     return (
       <div className="w-72 border-b">
         <h3 className="text-h2 pb-2">Your APIs</h3>

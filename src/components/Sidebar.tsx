@@ -132,7 +132,7 @@ export function Sidebar() {
   }
 
   return (
-    <aside className="w-64 border-r bg-background h-screen flex flex-col">
+    <aside className="w-64 border-r bg-background h-screen flex flex-col bg-neutral-50">
       {/* Header */}
       <div className="flex p-3 border-b">
         <div className="mx-auto">
