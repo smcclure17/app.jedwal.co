@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardAccountIdRouteImport } from './routes/_dashboard.$accountId'
+import { Route as DashboardAccountIdIndexRouteImport } from './routes/_dashboard.$accountId.index'
 import { Route as DashboardAccountIdPostsRouteImport } from './routes/_dashboard.$accountId.posts'
 import { Route as DashboardAccountIdApisRouteImport } from './routes/_dashboard.$accountId.apis'
 import { Route as DashboardAccountIdOrganizationsIndexRouteImport } from './routes/_dashboard.$accountId.organizations.index'
@@ -33,6 +34,11 @@ const DashboardAccountIdRoute = DashboardAccountIdRouteImport.update({
   id: '/_dashboard/$accountId',
   path: '/$accountId',
   getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardAccountIdIndexRoute = DashboardAccountIdIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardAccountIdRoute,
 } as any)
 const DashboardAccountIdPostsRoute = DashboardAccountIdPostsRouteImport.update({
   id: '/posts',
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/$accountId': typeof DashboardAccountIdRouteWithChildren
   '/$accountId/apis': typeof DashboardAccountIdApisRouteWithChildren
   '/$accountId/posts': typeof DashboardAccountIdPostsRouteWithChildren
+  '/$accountId/': typeof DashboardAccountIdIndexRoute
   '/$accountId/apis/$apiId': typeof DashboardAccountIdApisApiIdRoute
   '/$accountId/organizations/create': typeof DashboardAccountIdOrganizationsCreateRoute
   '/$accountId/posts/$postId': typeof DashboardAccountIdPostsPostIdRoute
@@ -83,9 +90,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
-  '/$accountId': typeof DashboardAccountIdRouteWithChildren
   '/$accountId/apis': typeof DashboardAccountIdApisRouteWithChildren
   '/$accountId/posts': typeof DashboardAccountIdPostsRouteWithChildren
+  '/$accountId': typeof DashboardAccountIdIndexRoute
   '/$accountId/apis/$apiId': typeof DashboardAccountIdApisApiIdRoute
   '/$accountId/organizations/create': typeof DashboardAccountIdOrganizationsCreateRoute
   '/$accountId/posts/$postId': typeof DashboardAccountIdPostsPostIdRoute
@@ -98,6 +105,7 @@ export interface FileRoutesById {
   '/_dashboard/$accountId': typeof DashboardAccountIdRouteWithChildren
   '/_dashboard/$accountId/apis': typeof DashboardAccountIdApisRouteWithChildren
   '/_dashboard/$accountId/posts': typeof DashboardAccountIdPostsRouteWithChildren
+  '/_dashboard/$accountId/': typeof DashboardAccountIdIndexRoute
   '/_dashboard/$accountId/apis/$apiId': typeof DashboardAccountIdApisApiIdRoute
   '/_dashboard/$accountId/organizations/create': typeof DashboardAccountIdOrganizationsCreateRoute
   '/_dashboard/$accountId/posts/$postId': typeof DashboardAccountIdPostsPostIdRoute
@@ -111,6 +119,7 @@ export interface FileRouteTypes {
     | '/$accountId'
     | '/$accountId/apis'
     | '/$accountId/posts'
+    | '/$accountId/'
     | '/$accountId/apis/$apiId'
     | '/$accountId/organizations/create'
     | '/$accountId/posts/$postId'
@@ -119,9 +128,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
-    | '/$accountId'
     | '/$accountId/apis'
     | '/$accountId/posts'
+    | '/$accountId'
     | '/$accountId/apis/$apiId'
     | '/$accountId/organizations/create'
     | '/$accountId/posts/$postId'
@@ -133,6 +142,7 @@ export interface FileRouteTypes {
     | '/_dashboard/$accountId'
     | '/_dashboard/$accountId/apis'
     | '/_dashboard/$accountId/posts'
+    | '/_dashboard/$accountId/'
     | '/_dashboard/$accountId/apis/$apiId'
     | '/_dashboard/$accountId/organizations/create'
     | '/_dashboard/$accountId/posts/$postId'
@@ -167,6 +177,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/$accountId'
       preLoaderRoute: typeof DashboardAccountIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_dashboard/$accountId/': {
+      id: '/_dashboard/$accountId/'
+      path: '/'
+      fullPath: '/$accountId/'
+      preLoaderRoute: typeof DashboardAccountIdIndexRouteImport
+      parentRoute: typeof DashboardAccountIdRoute
     }
     '/_dashboard/$accountId/posts': {
       id: '/_dashboard/$accountId/posts'
@@ -244,6 +261,7 @@ const DashboardAccountIdPostsRouteWithChildren =
 interface DashboardAccountIdRouteChildren {
   DashboardAccountIdApisRoute: typeof DashboardAccountIdApisRouteWithChildren
   DashboardAccountIdPostsRoute: typeof DashboardAccountIdPostsRouteWithChildren
+  DashboardAccountIdIndexRoute: typeof DashboardAccountIdIndexRoute
   DashboardAccountIdOrganizationsCreateRoute: typeof DashboardAccountIdOrganizationsCreateRoute
   DashboardAccountIdOrganizationsIndexRoute: typeof DashboardAccountIdOrganizationsIndexRoute
 }
@@ -251,6 +269,7 @@ interface DashboardAccountIdRouteChildren {
 const DashboardAccountIdRouteChildren: DashboardAccountIdRouteChildren = {
   DashboardAccountIdApisRoute: DashboardAccountIdApisRouteWithChildren,
   DashboardAccountIdPostsRoute: DashboardAccountIdPostsRouteWithChildren,
+  DashboardAccountIdIndexRoute: DashboardAccountIdIndexRoute,
   DashboardAccountIdOrganizationsCreateRoute:
     DashboardAccountIdOrganizationsCreateRoute,
   DashboardAccountIdOrganizationsIndexRoute:
