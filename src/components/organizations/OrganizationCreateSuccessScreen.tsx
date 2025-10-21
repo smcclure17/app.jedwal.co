@@ -18,7 +18,7 @@ export const OrganizationCreateSuccessScreen = ({
         className="mb-4"
       />
 
-      <h2 className={`text-2xl text-[#005430] text-center font-accent`}>
+      <h2 className={`text-2xl text-[#005430] text-center`}>
         Success! Your organization has been created
       </h2>
 

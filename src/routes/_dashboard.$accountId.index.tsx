@@ -14,7 +14,7 @@ export const Route = createFileRoute('/_dashboard/$accountId/')({
 
 function DashboardHome() {
   const { accountId } = Route.useParams()
-  const { data: user } = useUserData()
+  const { data: user } = useUserData(accountId)
   const { data: posts } = usePosts(accountId)
   const { data: apis } = useApis(accountId)
 

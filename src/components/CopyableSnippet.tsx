@@ -23,7 +23,7 @@ export const CopyableSnippet = ({ text }: { text: string }) => {
             onClick={copyToClipboard}
             id="copy-button"
             type="text"
-            className="bg-gray-50 border-gray-300 text-gray-600 w-full font-accent cursor-pointer"
+            className="bg-gray-50 border-gray-300 text-gray-600 w-full font-mono cursor-pointer"
             value={text}
             readOnly
           />

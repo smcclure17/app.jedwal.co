@@ -17,7 +17,7 @@ export const NotLoggedInScreen = ({
         alt="Jedwal logo"
       />
 
-      <h2 className={`text-2xl text-[#005430] text-center font-accent`}>
+      <h2 className={`text-2xl text-[#005430] text-center`}>
         {message}
       </h2>
 

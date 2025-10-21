@@ -1,3 +1,5 @@
+import { Spinner } from "../Spinner";
+
 export function ApisLayoutSkeleton() {
   return (
     <div className="flex flex-col space-y-12 mr-12 pt-10 pl-4">
@@ -34,7 +36,7 @@ export function ApisLayoutSkeleton() {
 
         {/* Content Area Skeleton */}
         <div className="flex flex-1 items-center justify-center text-gray-500">
-          <span>Loading...</span>
+          <Spinner srText="loading"/>
         </div>
       </div>
     </div>

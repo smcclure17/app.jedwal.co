@@ -183,7 +183,7 @@ export function Sidebar() {
                       setIsAccountMenuOpen(false)
                       // Navigate to the home page of the selected account
                       navigate({
-                        to: '/$accountId/posts',
+                        to: '/$accountId',
                         params: { accountId: account.id },
                       })
                     }}

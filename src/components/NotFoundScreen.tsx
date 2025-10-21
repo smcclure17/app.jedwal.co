@@ -11,7 +11,7 @@ export const NotFoundScreen = () => {
         className="mb-4"
       />
 
-      <h2 className={`text-2xl text-[#005430] text-center font-accent`}>
+      <h2 className={`text-2xl text-[#005430] text-center`}>
         These are not the sheets you're looking for
       </h2>
 

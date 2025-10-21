@@ -5,6 +5,8 @@ import { Sidebar } from '@/components/Sidebar'
 import { Spinner } from '@/components/Spinner'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { useUserData } from '@/hooks/use-user'
+import { usePosts } from '@/hooks/use-posts'
+import { useApis } from '@/hooks/use-apis'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 
 // src/routes/_dashboard.$accountId.tsx
@@ -16,6 +18,11 @@ function AccountLayout() {
   const { accountId } = Route.useParams()
 
   const { data: user, isLoading } = useUserData()
+
+  // Prefetch posts and APIs data in the background
+  // These will be cached and ready when navigating to /posts or /apis
+  usePosts(accountId)
+  useApis(accountId)
 
   if (isLoading) {
     return (
