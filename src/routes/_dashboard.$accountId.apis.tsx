@@ -18,7 +18,12 @@ function PostsLayout() {
 
   const { data: posts } = useApis(accountId)
 
-  if (posts && posts.results.length === 0) {
+  // Don't render anything while loading to prevent flicker
+  if (posts === null) {
+    return null
+  }
+
+  if (posts.results.length === 0) {
     return (
       <div className="flex flex-1 items-center justify-center pt-10">
         <FirstApiSplash accountId={accountId} />
