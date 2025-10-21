@@ -1,6 +1,6 @@
 const config = {
   api: {
-    url: 'https://api.jedwal.co',
+    url: 'http://localhost:8000',
   },
 }
 

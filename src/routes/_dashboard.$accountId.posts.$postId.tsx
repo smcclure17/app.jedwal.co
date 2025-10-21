@@ -58,20 +58,23 @@ function PostLayout() {
         <Separator />
         <PostRepublish accountId={accountId} postId={postId} />
       </div>
-      <DashboardSection title="Content Link">
+      <DashboardSection
+        title="Content Link"
+        subTitle="Use this URL in your app to access the post content"
+      >
         <CopyableSnippet text={postJedwalUrl} />
       </DashboardSection>
-      <DashboardSection title="Categories">
+      <DashboardSection title="Categories" subTitle='Add categories to make it easy to organize your posts'>
         <PostCategories
           accountId={accountId}
           postId={postId}
           categories={post.categories ?? []}
         />
       </DashboardSection>
-      <DashboardSection title="Analytics">
+      <DashboardSection title="Analytics" subTitle='See how many impressions your posts are driving'>
         <PostAnalyticsChart accountId={accountId} postId={postId} />
       </DashboardSection>
-      <DashboardSection title="Webhook Integrations">
+      <DashboardSection title="Webhook Integrations" subTitle='Webhook integrations allow your apps to stay up to date with your content.'>
         <WebhookIntegrations
           accountId={accountId}
           apiName={postId}
