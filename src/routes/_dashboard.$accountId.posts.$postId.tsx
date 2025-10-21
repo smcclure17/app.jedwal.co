@@ -40,23 +40,32 @@ function PostLayout() {
 
   return (
     <div className="flex flex-col space-y-6 w-full">
-      <div className="flex flex-col space-y-2">
+      <div className="flex flex-col space-y-3">
         <div className="flex flex-col space-y-1">
           <h2 className="text-h2">{post.title}</h2>
-          <LastRepublishedSnippet lastModifiedIso={post.last_modified} />
+          <h3 className="text-lg font-accent text-muted-foreground">
+            /doc/{post.doc_api_name}
+          </h3>
         </div>
-        <h3 className="text-2xl font-accent text-primary">
-          /doc/{post.doc_api_name}
-        </h3>
-        <a
-          href={postSourceUrl}
-          target="_blank"
-          className="text-sm underline hover:no-underline text-[#0000EE] w-fit"
-        >
-          View Source Google Document
-        </a>
+
+        <div className="flex items-center gap-3 flex-wrap">
+          <PostRepublish accountId={accountId} postId={postId} />
+          <span className="text-muted-foreground">|</span>
+          <LastRepublishedSnippet lastModifiedIso={post.published_at} />
+          <span className="text-muted-foreground">|</span>
+          <a
+            href={postSourceUrl}
+            target="_blank"
+            className="text-sm underline hover:no-underline text-blue-600 dark:text-blue-500 flex items-center gap-1"
+          >
+            View Source
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-3 h-3">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+            </svg>
+          </a>
+        </div>
+
         <Separator />
-        <PostRepublish accountId={accountId} postId={postId} />
       </div>
       <DashboardSection
         title="Content Link"

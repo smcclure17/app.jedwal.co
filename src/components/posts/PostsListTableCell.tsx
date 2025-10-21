@@ -12,7 +12,7 @@ export function PostsListTableCell({ row }: { row: PostMetadata }) {
       </div>
       <div className="flex flex-row space-x-2">
         {row.categories?.map((cat: string) => (
-          <Badge variant={'outline'}>{cat}</Badge>
+          <Badge variant={'secondary'}>{cat}</Badge>
         ))}
       </div>
     </div>

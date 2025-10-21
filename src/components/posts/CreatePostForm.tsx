@@ -68,7 +68,6 @@ export const CreatePostForm = ({
               setSheetUrl(e.target.value)
               setSheetId(extractGoogleResourceId(e.target.value))
             }}
-            className="font-accent"
             value={sheetUrl}
             placeholder={
               disabled

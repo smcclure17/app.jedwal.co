@@ -119,7 +119,6 @@ export const GooglePicker = ({
     <>
       <Button
         variant={'default'}
-        className="font-accent"
         onClick={handleToggle}
         disabled={disabled || fileId === ''}
       >

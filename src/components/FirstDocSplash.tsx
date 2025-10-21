@@ -4,19 +4,15 @@ export interface FirstApiSplashProps {
   accountId: string
 }
 
-export const FirstDocSplash = async ({ accountId }: FirstApiSplashProps) => {
+export const FirstDocSplash = ({ accountId }: FirstApiSplashProps) => {
   return (
     <div className="flex margin-auto mt-24 rounded-lg w-fit ">
       <div className="flex flex-col">
-        <h1 className={`font-accent text-4xl text-[#005430]`}>
-          Welcome to Jedwal CMS!
-        </h1>
-        <p>Jedwal turns your Google Docs into CMS Posts.</p>
-        <h2 className={`font-accent text-2xl pt-5 text-[#005430]`}>
-          Let&apos;s create our first Post
+        <h2 className={`text-3xl font-medium py-1 text-primary`}>
+          Let&apos;s create our first post
         </h2>
         <p>
-          Following the steps below, we&apos;ll create a new Post from a Google
+          Following the steps below, we&apos;ll create a new post from a Google
           Doc with sample data.
         </p>
         <ol className="list-decimal space-y-1 pl-4 pt-4">
@@ -24,7 +20,7 @@ export const FirstDocSplash = async ({ accountId }: FirstApiSplashProps) => {
             <a
               href="https://docs.new"
               target="_blank"
-              className="font-medium text-blue-600 dark:text-blue-500 hover:underline flex flex-row"
+              className="font-medium text-blue-600 dark:text-blue-500 hover:no-underline underline flex flex-row"
             >
               <span className="pr-2">Create a new Google Document</span>
               <ArrowIcon />

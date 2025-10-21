@@ -18,7 +18,7 @@ export function WebhookIntegrations({
   const [method, setMethod] = useState<'GET' | 'POST'>('GET')
   const [url, setUrl] = useState('')
   const [name, setName] = useState('')
-  const [payload, setPayload] = useState({})
+  const [payload, setPayload] = useState('')
   const [allWebhooks, setAllWebhooks] = useState(webhooks)
 
   const handleCreate = async () => {

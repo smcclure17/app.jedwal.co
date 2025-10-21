@@ -51,9 +51,9 @@ export function CreatePostModal({
           </DialogHeader>
           <div className="grid gap-4">
             <div className="grid gap-3">
-              <Label htmlFor="post-slug">Post URL Path (slug)</Label>
+              <Label htmlFor="post-slug-input">Post URL Path (slug)</Label>
               <Input
-                id="post-slug"
+                id="post-slug-input"
                 name="slug"
                 defaultValue={toSlug(title)}
                 className="font-mono text-sm"

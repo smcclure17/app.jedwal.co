@@ -2,6 +2,7 @@
 import { CreatePostForm } from '@/components/posts/CreatePostForm'
 import { FirstDocSplash } from '@/components/FirstDocSplash'
 import { PostsList } from '@/components/posts/PostsList'
+import { PostsLayoutSkeleton } from '@/components/posts/PostsLayoutSkeleton'
 import { usePosts } from '@/hooks/use-posts'
 import { createFileRoute, Outlet, useParams } from '@tanstack/react-router'
 
@@ -18,7 +19,12 @@ function PostsLayout() {
 
   const { data: posts } = usePosts(accountId)
 
-  if (posts && posts.length === 0) {
+  // Show skeleton while loading to prevent flicker
+  if (posts === null) {
+    return <PostsLayoutSkeleton />
+  }
+
+  if (posts.length === 0) {
     return (
       <div className="flex flex-1 items-center justify-center pt-10">
         <FirstDocSplash accountId={accountId} />
