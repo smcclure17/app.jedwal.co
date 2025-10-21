@@ -2,6 +2,7 @@
 import { ApisList } from '@/components/apis/ApisList'
 import { CreateApiForm } from '@/components/apis/CreateApiForm'
 import { FirstApiSplash } from '@/components/apis/FirstApiSplash'
+import { ApisLayoutSkeleton } from '@/components/apis/ApisLayoutSkeleton'
 import { useApis } from '@/hooks/use-apis'
 import { createFileRoute, Outlet, useParams } from '@tanstack/react-router'
 
@@ -18,9 +19,9 @@ function PostsLayout() {
 
   const { data: posts } = useApis(accountId)
 
-  // Don't render anything while loading to prevent flicker
+  // Show skeleton while loading to prevent flicker
   if (posts === null) {
-    return null
+    return <ApisLayoutSkeleton />
   }
 
   if (posts.results.length === 0) {
