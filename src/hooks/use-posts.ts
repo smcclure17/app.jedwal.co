@@ -21,7 +21,8 @@ export function useCreatePost(accountId: string) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (googleId: string) => createPost(googleId, accountId),
+    mutationFn: ({ googleId, slug }: { googleId: string; slug: string }) =>
+      createPost(googleId, slug, accountId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['posts', accountId] })
     },
@@ -97,7 +98,7 @@ export function useRemovePostCategory(accountId: string, postId: string) {
             ? {
                 ...post,
                 categories: (post.categories ?? []).filter(
-                  (c) => c !== categoryToRemove,
+                  (c: string) => c !== categoryToRemove,
                 ),
               }
             : post,
