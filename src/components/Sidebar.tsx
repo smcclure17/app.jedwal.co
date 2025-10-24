@@ -10,11 +10,14 @@ import {
   CreditCard,
   LogOut,
   Building2,
+  PanelLeftClose,
+  PanelLeft,
 } from 'lucide-react'
 import { useUserData } from '@/hooks/use-user'
 import { Badge } from './ui/badge'
 import config from '@/config'
 import { LogoLink } from './LogoLink'
+import { Image } from '@unpic/react'
 
 export function Sidebar() {
   const { user, error } = useAuth()
@@ -24,6 +27,7 @@ export function Sidebar() {
   const { accountId } = useParams({ strict: false })
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false)
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
+  const [isCollapsed, setIsCollapsed] = useState(false)
   const navigate = useNavigate()
 
   const accountMenuRef = useRef<HTMLDivElement>(null)
@@ -84,9 +88,17 @@ export function Sidebar() {
     return () => document.removeEventListener('keydown', handleEscape)
   }, [isAccountMenuOpen, isUserMenuOpen])
 
+  // Close dropdowns when collapsing
+  useEffect(() => {
+    if (isCollapsed) {
+      setIsAccountMenuOpen(false)
+      setIsUserMenuOpen(false)
+    }
+  }, [isCollapsed])
+
   if (error) {
     return (
-      <aside className="w-64 border-r bg-background h-screen p-4">
+      <aside className={`border-r bg-background h-screen p-4 transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'}`}>
         <div className="text-sm">Error loading user data</div>
       </aside>
     )
@@ -132,103 +144,129 @@ export function Sidebar() {
   }
 
   return (
-    <aside className="w-64 border-r bg-background h-screen flex flex-col bg-neutral-50">
+    <aside className={`border-r bg-background h-screen flex flex-col bg-neutral-50 transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'}`}>
       {/* Header */}
       <div className="flex p-3 border-b">
-        <div className="mx-auto">
-          <LogoLink size="small" />
-        </div>
-      </div>
-
-      {/* Account Selector */}
-      <div className="p-2 border-b">
-        {allIsLoading ? (
-          <div className="animate-pulse px-2 py-2">
-            <div className="h-4 w-32 bg-muted rounded mb-2"></div>
-            <div className="h-3 w-24 bg-muted rounded"></div>
+        {isCollapsed ? (
+          <div className="mx-auto">
+            <Image height={35} width={35} src='/favicon-196x196.png'></Image>
           </div>
         ) : (
-          <div className="relative">
-            <button
-              ref={accountButtonRef}
-              onClick={() => setIsAccountMenuOpen(!isAccountMenuOpen)}
-              className="w-full flex items-center justify-between px-2 py-2 rounded-md hover:bg-accent text-left transition-colors"
-            >
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <div className="text-sm font-medium truncate">
-                    {currentAccount?.name}
-                  </div>
-                  {currentAccount?.isPremium && (
-                    <Badge variant={'secondary'} className="py-0">
-                      Premium
-                    </Badge>
-                  )}
-                </div>
-              </div>
-              <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
-            </button>
-
-            {/* Dropdown Menu */}
-            {isAccountMenuOpen && (
-              <div
-                ref={accountMenuRef}
-                className="absolute top-full left-0 right-0 mt-1 bg-popover border rounded-md shadow-md z-50 py-1"
-              >
-                {allAccounts.map((account) => (
-                  <button
-                    key={account.id}
-                    onClick={() => {
-                      setSelectedAccountId(account.id)
-                      setIsAccountMenuOpen(false)
-                      // Navigate to the home page of the selected account
-                      navigate({
-                        to: '/$accountId',
-                        params: { accountId: account.id },
-                      })
-                    }}
-                    className="w-full flex items-center justify-between px-2 py-2 hover:bg-accent text-left transition-colors"
-                  >
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <div className="text-sm font-medium truncate">
-                          {account.name}
-                        </div>
-                        {account.isPremium && (
-                          <Badge variant={'secondary'} className="py-0">
-                            Premium
-                          </Badge>
-                        )}
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        {account.type === 'organization'
-                          ? 'Organization'
-                          : 'Personal'}
-                      </div>
-                    </div>
-                    {selectedAccountId === account.id && (
-                      <Check className="h-4 w-4 shrink-0" />
-                    )}
-                  </button>
-                ))}
-
-                {/* Manage Organizations Link */}
-                <div className="border-t mt-1 pt-1">
-                  <Link
-                    to="/$accountId/organizations"
-                    params={{ accountId: individualUser?.id ?? '' }}
-                    onClick={() => setIsAccountMenuOpen(false)}
-                    className="w-full flex items-center gap-2 px-2 py-2 hover:bg-accent text-left transition-colors text-sm"
-                  >
-                    <Building2 className="h-4 w-4" />
-                    Manage Organizations
-                  </Link>
-                </div>
-              </div>
-            )}
+          <div className="mx-auto">
+            <LogoLink size="small" />
           </div>
         )}
       </div>
+
+      {/* Toggle Button */}
+      <div className={`p-2 border-b ${isCollapsed ? 'flex justify-center' : ''}`}>
+        <button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="flex items-center gap-2 px-2 py-2 rounded-md hover:bg-accent transition-colors text-sm font-medium w-full justify-center"
+          title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        >
+          {isCollapsed ? (
+            <PanelLeft className="h-4 w-4" />
+          ) : (
+            <>
+              <PanelLeftClose className="h-4 w-4" />
+              <span>Collapse</span>
+            </>
+          )}
+        </button>
+      </div>
+
+      {/* Account Selector */}
+      {!isCollapsed && (
+        <div className="p-2 border-b">
+          {allIsLoading ? (
+            <div className="animate-pulse px-2 py-2">
+              <div className="h-4 w-32 bg-muted rounded mb-2"></div>
+              <div className="h-3 w-24 bg-muted rounded"></div>
+            </div>
+          ) : (
+            <div className="relative">
+              <button
+                ref={accountButtonRef}
+                onClick={() => setIsAccountMenuOpen(!isAccountMenuOpen)}
+                className="w-full flex items-center justify-between px-2 py-2 rounded-md hover:bg-accent text-left transition-colors"
+              >
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <div className="text-sm font-medium truncate">
+                      {currentAccount?.name}
+                    </div>
+                    {currentAccount?.isPremium && (
+                      <Badge variant={'secondary'} className="py-0">
+                        Premium
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+                <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
+              </button>
+
+              {/* Dropdown Menu */}
+              {isAccountMenuOpen && (
+                <div
+                  ref={accountMenuRef}
+                  className="absolute top-full left-0 right-0 mt-1 bg-popover border rounded-md shadow-md z-50 py-1"
+                >
+                  {allAccounts.map((account) => (
+                    <button
+                      key={account.id}
+                      onClick={() => {
+                        setSelectedAccountId(account.id)
+                        setIsAccountMenuOpen(false)
+                        // Navigate to the home page of the selected account
+                        navigate({
+                          to: '/$accountId',
+                          params: { accountId: account.id },
+                        })
+                      }}
+                      className="w-full flex items-center justify-between px-2 py-2 hover:bg-accent text-left transition-colors"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <div className="text-sm font-medium truncate">
+                            {account.name}
+                          </div>
+                          {account.isPremium && (
+                            <Badge variant={'secondary'} className="py-0">
+                              Premium
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {account.type === 'organization'
+                            ? 'Organization'
+                            : 'Personal'}
+                        </div>
+                      </div>
+                      {selectedAccountId === account.id && (
+                        <Check className="h-4 w-4 shrink-0" />
+                      )}
+                    </button>
+                  ))}
+
+                  {/* Manage Organizations Link */}
+                  <div className="border-t mt-1 pt-1">
+                    <Link
+                      to="/$accountId/organizations"
+                      params={{ accountId: individualUser?.id ?? '' }}
+                      onClick={() => setIsAccountMenuOpen(false)}
+                      className="w-full flex items-center gap-2 px-2 py-2 hover:bg-accent text-left transition-colors text-sm"
+                    >
+                      <Building2 className="h-4 w-4" />
+                      Manage Organizations
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Navigation */}
       <nav className="flex-1 p-2 space-y-1">
@@ -242,18 +280,20 @@ export function Sidebar() {
             <Link
               to={`/$accountId/posts`}
               params={{ accountId: selectedAccountId ?? user?.id ?? '' }}
-              className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-accent transition-colors text-sm font-medium"
+              className={`flex items-center gap-3 px-3 py-2 rounded-md hover:bg-accent transition-colors text-sm font-medium ${isCollapsed ? 'justify-center' : ''}`}
+              title={isCollapsed ? 'Posts' : undefined}
             >
               <FileText className="h-4 w-4" />
-              Posts
+              {!isCollapsed && 'Posts'}
             </Link>
             <Link
               to={`/$accountId/apis`}
               params={{ accountId: selectedAccountId ?? user?.id ?? '' }}
-              className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-accent transition-colors text-sm font-medium"
+              className={`flex items-center gap-3 px-3 py-2 rounded-md hover:bg-accent transition-colors text-sm font-medium ${isCollapsed ? 'justify-center' : ''}`}
+              title={isCollapsed ? 'APIs' : undefined}
             >
               <Plug2 className="h-4 w-4" />
-              APIs
+              {!isCollapsed && 'APIs'}
             </Link>
           </>
         )}
@@ -270,26 +310,29 @@ export function Sidebar() {
             <button
               ref={userButtonRef}
               onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-              className="w-full flex items-center gap-3 px-2 py-2 rounded-md hover:bg-accent text-left transition-colors"
+              className={`w-full flex items-center gap-3 px-2 py-2 rounded-md hover:bg-accent text-left transition-colors ${isCollapsed ? 'justify-center' : ''}`}
+              title={isCollapsed ? individualUser?.display_name : undefined}
             >
-              <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-medium">
+              <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-medium shrink-0">
                 {individualUser && getInitials(individualUser.display_name)}
               </div>
-              <div className="flex-1 min-w-0">
-                <div className="text-sm font-medium truncate">
-                  {individualUser?.display_name}
+              {!isCollapsed && (
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-medium truncate">
+                    {individualUser?.display_name}
+                  </div>
+                  <div className="text-xs text-muted-foreground truncate">
+                    {individualUser?.email}
+                  </div>
                 </div>
-                <div className="text-xs text-muted-foreground truncate">
-                  {individualUser?.email}
-                </div>
-              </div>
+              )}
             </button>
 
             {/* User Popover Menu */}
             {isUserMenuOpen && (
               <div
                 ref={userMenuRef}
-                className="absolute bottom-full left-0 right-0 mb-1 bg-popover border rounded-lg shadow-lg z-50 py-2 min-w-[240px]"
+                className={`absolute bottom-full mb-1 bg-popover border rounded-lg shadow-lg z-50 py-2 min-w-[240px] ${isCollapsed ? 'left-full ml-2' : 'left-0 right-0'}`}
               >
                 {/* User Info Header */}
                 <div className="px-3 py-2 border-b">
