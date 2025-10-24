@@ -41,7 +41,7 @@ function PostLayout() {
         <div className="flex flex-col space-y-1">
           <h2 className="text-h2">{post.spreadsheet_title}</h2>
           <h3 className="text-lg font-accent text-muted-foreground">
-            /doc/{post.sheet_api_name}
+            /api/{post.sheet_api_name}
           </h3>
         </div>
         <a
