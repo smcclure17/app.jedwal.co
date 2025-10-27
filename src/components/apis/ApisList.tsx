@@ -1,10 +1,12 @@
 import { ApisMetadata } from '@/schemas'
 import { ApisListTable } from './ApisListTable'
+import { PremiumApiCard } from '../UpgradeAccountCard'
 
 export interface PostsListProps {
   accountId: string
   posts: ApisMetadata
   selectedPostId?: string
+  showPremiumCard?: boolean
 }
 
 function ApisListSkeleton() {
@@ -28,7 +30,7 @@ function ApisListSkeleton() {
   )
 }
 
-export function ApisList({ accountId, posts, selectedPostId }: PostsListProps) {
+export function ApisList({ accountId, posts, selectedPostId, showPremiumCard = false }: PostsListProps) {
   if (posts.results.length === 0 || !posts.results) {
     return (
       <div className="w-72 border-b">
@@ -49,6 +51,11 @@ export function ApisList({ accountId, posts, selectedPostId }: PostsListProps) {
           accountId={accountId}
           selectedPostId={selectedPostId}
         />
+        {showPremiumCard && (
+          <div className="p-2">
+            <PremiumApiCard text={"Upgrade to create more posts"}/>
+          </div>
+        )}
       </div>
     </div>
   )

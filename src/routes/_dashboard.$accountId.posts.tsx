@@ -46,6 +46,7 @@ function PostsLayout() {
               accountId={accountId}
               selectedPostId={postId}
               posts={posts}
+              showPremiumCard={disableCreate}
             />
           </div>
           <div className="w-0.25 bg-gray-300" />

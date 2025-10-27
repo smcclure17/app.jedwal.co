@@ -6,6 +6,7 @@ export interface PostsListProps {
   accountId: string
   posts: PostMetadata[] | null
   selectedPostId?: string
+  showPremiumCard?: boolean
 }
 
 function PostsListSkeleton() {
@@ -33,6 +34,7 @@ export function PostsList({
   accountId,
   posts,
   selectedPostId,
+  showPremiumCard = false,
 }: PostsListProps) {
   if (posts === null) {
     return (
@@ -54,9 +56,11 @@ export function PostsList({
           accountId={accountId}
           selectedPostId={selectedPostId}
         />
-        <div className="p-2">
-          <PremiumApiCard />
-        </div>
+        {showPremiumCard && (
+          <div className="p-2">
+            <PremiumApiCard text={"Upgrade to create more posts"}/>
+          </div>
+        )}
       </div>
     </div>
   )

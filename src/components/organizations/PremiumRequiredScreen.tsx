@@ -12,7 +12,7 @@ export const PremiumRequiredScreen = () => {
         className="mb-4"
       />
 
-      <h2 className={`text-2xl text-[#005430] text-center`}>
+      <h2 className={`text-2xl text-primary text-center`}>
         Only premium users can create organizations
       </h2>
 
@@ -23,7 +23,7 @@ export const PremiumRequiredScreen = () => {
       <div className="flex flex-col space-y-4 items-center pt-4">
         <a
           href="https://jedwal.co/pricing"
-          className="px-6 py-2 bg-[#005430] text-white rounded-md hover:bg-[#004020] transition-colors font-medium"
+          className="px-6 py-2 bg-primary text-white rounded-md hover:bg-[#004020] transition-colors font-medium"
         >
           Upgrade Now
         </a>
