@@ -52,7 +52,7 @@ export function ApisList({ accountId, posts, selectedPostId, showPremiumCard = f
           selectedPostId={selectedPostId}
         />
         {showPremiumCard && (
-          <div className="p-2">
+          <div className="py-4">
             <PremiumApiCard text={"Upgrade to create more posts"}/>
           </div>
         )}

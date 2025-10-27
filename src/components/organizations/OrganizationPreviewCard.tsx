@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router'
+import { Link, useParams } from '@tanstack/react-router'
 import { Card, CardDescription, CardHeader, CardTitle } from '../ui/card'
 import { Button } from '../ui/button'
 import { Loader2, Trash2 } from 'lucide-react'
@@ -6,6 +6,7 @@ import { useDeleteOrganization } from '@/hooks/use-organizations'
 import { useState } from 'react'
 
 export function OrganizationPreviewCard({ org }: { org: any }) {
+  const {accountId} = useParams({strict: false});
   const [deletingOrgId, setDeletingOrgId] = useState<string | null>(null)
   const deleteMutation = useDeleteOrganization()
 
@@ -51,19 +52,21 @@ export function OrganizationPreviewCard({ org }: { org: any }) {
                 Created {new Date(org.created_at).toLocaleDateString()}
               </CardDescription>
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={(e) => handleDeleteClick(org, e)}
-              disabled={deleteMutation.isPending}
-              className="text-destructive hover:text-destructive hover:bg-destructive/10"
-            >
-              {deletingOrgId === org.account_id ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Trash2 className="h-4 w-4" />
-              )}
-            </Button>
+            {org.created_by === accountId && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={(e) => handleDeleteClick(org, e)}
+                disabled={deleteMutation.isPending}
+                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+              >
+                {deletingOrgId === org.account_id ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Trash2 className="h-4 w-4" />
+                )}
+              </Button>
+            )}
           </div>
         </CardHeader>
       </Link>
