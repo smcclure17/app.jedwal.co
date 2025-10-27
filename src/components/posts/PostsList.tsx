@@ -1,5 +1,6 @@
 import { PostMetadata } from '@/schemas'
 import { PostsListTable } from './PostsListTable'
+import { PremiumApiCard } from '../UpgradeAccountCard'
 
 export interface PostsListProps {
   accountId: string
@@ -53,6 +54,9 @@ export function PostsList({
           accountId={accountId}
           selectedPostId={selectedPostId}
         />
+        <div className="p-2">
+          <PremiumApiCard />
+        </div>
       </div>
     </div>
   )

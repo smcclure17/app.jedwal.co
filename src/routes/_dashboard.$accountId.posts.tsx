@@ -5,6 +5,7 @@ import { PostsList } from '@/components/posts/PostsList'
 import { PostsLayoutSkeleton } from '@/components/posts/PostsLayoutSkeleton'
 import { usePosts } from '@/hooks/use-posts'
 import { createFileRoute, Outlet, useParams } from '@tanstack/react-router'
+import { useUserData } from '@/hooks/use-user'
 
 export const Route = createFileRoute('/_dashboard/$accountId/posts')({
   head: () => ({
@@ -18,11 +19,14 @@ function PostsLayout() {
   const { postId } = useParams({ strict: false }) // might exist
 
   const { data: posts } = usePosts(accountId)
+  const { data: user } = useUserData(accountId)
 
   // Show skeleton while loading to prevent flicker
-  if (posts === null) {
+  if (posts === null || user === null) {
     return <PostsLayoutSkeleton />
   }
+
+  const disableCreate = user?.account_status === 'free' && posts?.length >= 2
 
   if (posts.length === 0) {
     return (
@@ -35,7 +39,7 @@ function PostsLayout() {
   return (
     <div>
       <div className="flex flex-col space-y-12 mr-12 pt-10 pl-4">
-        <CreatePostForm accountId={accountId} />
+        <CreatePostForm accountId={accountId} disabled={disableCreate}/>
         <div className="flex space-x-12">
           <div className="max-w-sm ">
             <PostsList

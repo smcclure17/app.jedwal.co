@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { Spinner } from '@/components/Spinner'
 import { OrganizationCreateSuccessScreen } from '@/components/organizations/OrganizationCreateSuccessScreen'
 import { OrganizationForm } from '@/components/organizations/OrganizationForm'
+import { PremiumRequiredScreen } from '@/components/organizations/PremiumRequiredScreen'
 
 export const Route = createFileRoute(
   '/_dashboard/$accountId/organizations/create',
@@ -39,6 +40,10 @@ function NewOrganizationPage() {
         <span>Organization accounts cannot create organizations</span>
       </div>
     )
+  }
+
+  if (user.account_status === "free") {
+    return <PremiumRequiredScreen/>
   }
 
   if (error) {
