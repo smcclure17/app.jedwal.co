@@ -302,3 +302,21 @@ export const deleteOrganization = async (orgId: string) => {
   if (res.status !== 200) throw new Error('Failed to delete API')
   return res.json()
 }
+
+export const createCheckout = async () => {
+  const response = await fetch(`${config.api.url}/create-checkout`, {
+    method: "POST",
+    credentials: "include",
+  });
+
+  if (response.status === 401) {
+    throw new Error("User Not Logged In");
+  }
+
+  if (!response.ok) {
+    throw new Error(`Failed to create checkout: ${response.statusText}`);
+  }
+
+  const { url } = await response.json();
+  return url
+};

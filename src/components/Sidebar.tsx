@@ -98,7 +98,9 @@ export function Sidebar() {
 
   if (error) {
     return (
-      <aside className={`border-r bg-background h-screen p-4 transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'}`}>
+      <aside
+        className={`border-r bg-background h-screen p-4 transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'}`}
+      >
         <div className="text-sm">Error loading user data</div>
       </aside>
     )
@@ -144,12 +146,14 @@ export function Sidebar() {
   }
 
   return (
-    <aside className={`border-r bg-background h-screen flex flex-col bg-neutral-50 transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'}`}>
+    <aside
+      className={`border-r bg-background h-screen flex flex-col bg-neutral-50 transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'}`}
+    >
       {/* Header */}
       <div className="flex p-3 border-b">
         {isCollapsed ? (
           <div className="mx-auto">
-            <Image height={35} width={35} src='/favicon-196x196.png'></Image>
+            <Image height={35} width={35} src="/favicon-196x196.png"></Image>
           </div>
         ) : (
           <div className="mx-auto">
@@ -159,7 +163,9 @@ export function Sidebar() {
       </div>
 
       {/* Toggle Button */}
-      <div className={`p-2 border-b ${isCollapsed ? 'flex justify-center' : ''}`}>
+      <div
+        className={`p-2 border-b ${isCollapsed ? 'flex justify-center' : ''}`}
+      >
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="flex items-center gap-2 px-2 py-2 rounded-md hover:bg-accent transition-colors text-sm font-medium w-full justify-center"
@@ -364,13 +370,19 @@ export function Sidebar() {
 
                 {/* Menu Items */}
                 <div className="py-1">
-                  <a
-                    href={`${config.api.url}/`}
+                  {individualUser?.account_status === 'premium' ? <a
+                    href={`https://billing.stripe.com/p/login/${config.stripe.billingPortalId}`}
                     className="w-full flex items-center gap-3 px-3 py-2 hover:bg-accent text-left transition-colors text-sm"
                   >
                     <CreditCard className="h-4 w-4" />
                     Billing Portal
-                  </a>
+                  </a> : <a
+                    href={`https://jedwal.co/pricing`}
+                    className="w-full flex items-center gap-3 px-3 py-2 hover:bg-accent text-left transition-colors text-sm"
+                  >
+                    <CreditCard className="h-4 w-4" />
+                    Upgrade Now
+                  </a> }
                   <a
                     href={`${config.api.url}/logout`}
                     className="w-full flex items-center gap-3 px-3 py-2 hover:bg-accent text-left transition-colors text-sm"
