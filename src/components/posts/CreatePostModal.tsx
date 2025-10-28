@@ -12,10 +12,13 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { PostDocCreatePreview } from './PostDocCreatePreview'
 import { Spinner } from '@/components/Spinner'
+import { useCheckNameAvailable } from '@/hooks/use-check-name-available'
+import { useState } from 'react'
 
 interface CreatePostModalPostsProps {
   title: string
   url: string
+  accountId: string
   open?: boolean
   onOpenChange?: (open: boolean) => void
   onSubmit: (slug: string) => void
@@ -25,16 +28,19 @@ interface CreatePostModalPostsProps {
 export function CreatePostModal({
   title,
   url,
+  accountId,
   open,
   onOpenChange,
   onSubmit,
   isLoading = false,
 }: CreatePostModalPostsProps) {
+  const [slug, setSlug] = useState(toSlug(title))
+  const { data: isAvailable, isLoading: isCheckingAvailability } =
+    useCheckNameAvailable(accountId, slug)
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const formData = new FormData(e.currentTarget)
-    const slug = formData.get('slug') as string
+    if (!isAvailable) return
     onSubmit(slug)
   }
 
@@ -51,18 +57,33 @@ export function CreatePostModal({
           </DialogHeader>
           <div className="grid gap-4">
             <div className="grid gap-3">
-              <Label htmlFor="post-slug-input">Post URL Path (slug)</Label>
-              <Input
-                id="post-slug-input"
-                name="slug"
-                defaultValue={toSlug(title)}
-                className="font-mono text-sm"
-                required
-                disabled={isLoading}
-              />
-              <p className="text-xs text-muted-foreground">
-                Use lowercase letters, numbers, and hyphens only.
-              </p>
+              <Label
+                htmlFor="post-slug-input"
+                className="flex flex-col items-start"
+              >
+                <p>Post URL Path (slug)</p>
+                <p className="text-xs text-muted-foreground">
+                  Use lowercase letters, numbers, and hyphens only.
+                </p>
+              </Label>
+              <div className="flex flex-col space-y-1">
+                <Input
+                  id="post-slug-input"
+                  name="slug"
+                  value={slug}
+                  onChange={(e) => setSlug(e.target.value)}
+                  className="font-mono text-sm"
+                  required
+                  disabled={isLoading}
+                />
+                <div className="flex items-center gap-2 text-xs min-h-[1rem]">
+                  {!isCheckingAvailability && isAvailable === false && (
+                    <span className="text-red-600">
+                      Post name taken. Please try another
+                    </span>
+                  )}
+                </div>
+              </div>
             </div>
             <div className="grid gap-3">
               <Label>Converting this Google Doc</Label>
@@ -75,7 +96,10 @@ export function CreatePostModal({
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit" disabled={isLoading}>
+            <Button
+              type="submit"
+              disabled={isLoading || !isAvailable || isCheckingAvailability}
+            >
               {isLoading ? <Spinner srText="Creating..." /> : 'Create Post'}
             </Button>
           </DialogFooter>

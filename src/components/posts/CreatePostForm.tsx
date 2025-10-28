@@ -90,6 +90,7 @@ export const CreatePostForm = ({
         <CreatePostModal
           title={selectedDoc.name}
           url={selectedDoc.url}
+          accountId={accountId}
           open={true}
           onOpenChange={(open) => {
             if (!open) setSelectedDoc(null)
