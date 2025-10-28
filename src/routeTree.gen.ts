@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as CreateCheckoutRouteImport } from './routes/create-checkout'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardAccountIdRouteImport } from './routes/_dashboard.$accountId'
 import { Route as DashboardAccountIdIndexRouteImport } from './routes/_dashboard.$accountId.index'
@@ -23,6 +24,11 @@ import { Route as DashboardAccountIdApisApiIdRouteImport } from './routes/_dashb
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreateCheckoutRoute = CreateCheckoutRouteImport.update({
+  id: '/create-checkout',
+  path: '/create-checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -77,6 +83,7 @@ const DashboardAccountIdApisApiIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/create-checkout': typeof CreateCheckoutRoute
   '/login': typeof LoginRoute
   '/$accountId': typeof DashboardAccountIdRouteWithChildren
   '/$accountId/apis': typeof DashboardAccountIdApisRouteWithChildren
@@ -89,6 +96,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/create-checkout': typeof CreateCheckoutRoute
   '/login': typeof LoginRoute
   '/$accountId/apis': typeof DashboardAccountIdApisRouteWithChildren
   '/$accountId/posts': typeof DashboardAccountIdPostsRouteWithChildren
@@ -101,6 +109,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/create-checkout': typeof CreateCheckoutRoute
   '/login': typeof LoginRoute
   '/_dashboard/$accountId': typeof DashboardAccountIdRouteWithChildren
   '/_dashboard/$accountId/apis': typeof DashboardAccountIdApisRouteWithChildren
@@ -115,6 +124,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/create-checkout'
     | '/login'
     | '/$accountId'
     | '/$accountId/apis'
@@ -127,6 +137,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/create-checkout'
     | '/login'
     | '/$accountId/apis'
     | '/$accountId/posts'
@@ -138,6 +149,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/create-checkout'
     | '/login'
     | '/_dashboard/$accountId'
     | '/_dashboard/$accountId/apis'
@@ -151,6 +163,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CreateCheckoutRoute: typeof CreateCheckoutRoute
   LoginRoute: typeof LoginRoute
   DashboardAccountIdRoute: typeof DashboardAccountIdRouteWithChildren
 }
@@ -162,6 +175,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/create-checkout': {
+      id: '/create-checkout'
+      path: '/create-checkout'
+      fullPath: '/create-checkout'
+      preLoaderRoute: typeof CreateCheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -281,6 +301,7 @@ const DashboardAccountIdRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CreateCheckoutRoute: CreateCheckoutRoute,
   LoginRoute: LoginRoute,
   DashboardAccountIdRoute: DashboardAccountIdRouteWithChildren,
 }
