@@ -36,6 +36,7 @@ export const Primary: Story = {
   args: {
     title: 'This is my Google Doc',
     url: 'https://documents.google.com/doc/v1/dwfadfdsafdfasgfsdfda',
+    accountId: 'test-account-123',
     open: true,
     onOpenChange: (open) => console.log('Dialog open state:', open),
     onSubmit: (slug) => console.log('Submitted slug:', slug),
@@ -47,6 +48,7 @@ export const Loading: Story = {
   args: {
     title: 'This is my Google Doc',
     url: 'https://documents.google.com/doc/v1/dwfadfdsafdfasgfsdfda',
+    accountId: 'test-account-123',
     open: true,
     onOpenChange: (open) => console.log('Dialog open state:', open),
     onSubmit: (slug) => console.log('Submitted slug:', slug),

@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { useCreateOrganization } from '@/hooks/use-organizations'
+import { useCheckOrgNameAvailable } from '@/hooks/use-check-org-name-available'
 import { EmailInviteInput } from './EmailInviteInput'
 import { EmailList } from './EmailList'
 
@@ -28,6 +29,7 @@ export function OrganizationForm({
   const [emails, setEmails] = useState<string[]>([])
 
   const createMutation = useCreateOrganization()
+  const { data: isAvailable, isLoading: isCheckingAvailability } = useCheckOrgNameAvailable(orgName)
 
   const handleCreateSuccess = () => {
     onSuccess(orgName)
@@ -47,6 +49,7 @@ export function OrganizationForm({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    if (!isAvailable) return
     if (orgName.trim()) {
       createMutation.mutate(
         {
@@ -81,6 +84,13 @@ export function OrganizationForm({
               onChange={(e) => setOrgName(e.target.value)}
               required
             />
+            <div className="flex items-center gap-2 text-xs min-h-[1rem]">
+              {!isCheckingAvailability && isAvailable === false && (
+                <span className="text-red-600">
+                  Organization name taken. Please try another
+                </span>
+              )}
+            </div>
           </div>
 
           <EmailInviteInput
@@ -106,7 +116,7 @@ export function OrganizationForm({
             </Button>
             <Button
               type="submit"
-              disabled={!orgName.trim() || createMutation.isPending}
+              disabled={!orgName.trim() || createMutation.isPending || !isAvailable || isCheckingAvailability}
             >
               {createMutation.isPending
                 ? 'Creating...'
