@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { CopyableSnippet } from '../CopyableSnippet'
 import {
   Select,
@@ -7,43 +7,59 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { useWorksheetNames } from '@/hooks/use-apis'
+
 interface ApiCopyableSnippetProps {
   base: string
-  worksheets: string[]
+  accountId: string
+  postId: string
 }
+
 export function ApiCopyableSnippet({
   base,
-  worksheets,
+  accountId,
+  postId,
 }: ApiCopyableSnippetProps) {
-  const defaultWorksheet = worksheets.length > 0 ? worksheets[0] : 'Sheet1'
-  const disabled = worksheets.length === 1
-  const [worksheet, setWorksheet] = useState(defaultWorksheet)
+  const { data: worksheets, isLoading } = useWorksheetNames(accountId, postId)
+  const worksheetList = worksheets?.worksheets ?? []
 
-  // Reset worksheet when worksheets change (e.g., switching APIs)
+  const [worksheet, setWorksheet] = useState<string | undefined>(
+    worksheetList[0],
+  )
+
   useEffect(() => {
-    setWorksheet(defaultWorksheet)
-  }, [defaultWorksheet])
+    if (worksheetList.length > 0 && !worksheet) {
+      setWorksheet(worksheetList[0])
+    }
+  }, [worksheetList, postId])
 
+  const disabled = worksheetList.length <= 1 || isLoading
   const wsText = worksheet === 'Sheet1' ? '' : `?worksheet=${worksheet}`
   const urlText = `${base}${wsText}`
 
   return (
     <div className="flex flex-col space-y-1">
       <span className="text-sm">Select a worksheet</span>
+
       <Select
         onValueChange={(e) => setWorksheet(e)}
         value={worksheet}
         disabled={disabled}
       >
         <SelectTrigger className="w-36">
-          <SelectValue />
+          <SelectValue
+            placeholder={isLoading ? 'Loading...' : worksheet || 'Select'}
+          />
         </SelectTrigger>
         <SelectContent>
-          {worksheets.map((ws) => (
-            <SelectItem key={ws} value={ws}>{ws}</SelectItem>
+          {worksheetList?.map((ws: any) => (
+            <SelectItem key={ws} value={ws}>
+              {ws}
+            </SelectItem>
           ))}
         </SelectContent>
       </Select>
+
       <CopyableSnippet text={urlText} />
     </div>
   )

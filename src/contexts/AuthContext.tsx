@@ -1,11 +1,10 @@
 // src/contexts/AuthContext.tsx
-import config from '@/config'
-import { UserDataResponse } from '@/schemas'
 import React, { createContext, useContext, useEffect, useState } from 'react'
-
+import type { AccountRead } from '@/schemas'
+import config from '@/config'
 
 interface AuthState {
-  user: UserDataResponse | null
+  user: AccountRead | null
   isLoading: boolean
   error?: string
 }
@@ -25,10 +24,11 @@ export function AuthProvider({
   })
 
   useEffect(() => {
-    const query = accountId
-      ? `?account_id=${encodeURIComponent(accountId)}`
-      : ''
-    fetch(`${config.api.url}/get-account-data${query}`, {
+    const meUrl = `${config.api.url}/me`
+    const accountUrl = `${config.api.url}/manage/${accountId}`
+    const url = accountId ? accountUrl : meUrl
+
+    fetch(url, {
       credentials: 'include',
     })
       .then(async (res) => {

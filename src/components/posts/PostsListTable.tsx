@@ -1,17 +1,18 @@
-import { PostMetadata } from '@/schemas'
 import { rankItem } from '@tanstack/match-sorter-utils'
 import { Link } from '@tanstack/react-router'
 import {
-  useReactTable,
-  getCoreRowModel,
   flexRender,
-  FilterFn,
+  getCoreRowModel,
   getFilteredRowModel,
+  useReactTable,
 } from '@tanstack/react-table'
-import { PostsListTableCell } from './PostsListTableCell'
-import { Input } from '@/components/ui/input'
-import { useState, useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Search } from 'lucide-react'
+import { PostsListTableCell } from './PostsListTableCell'
+import type {
+  FilterFn} from '@tanstack/react-table';
+import type { Post } from '@/schemas'
+import { Input } from '@/components/ui/input'
 import {
   Select,
   SelectContent,
@@ -22,7 +23,7 @@ import {
 
 export interface PostsListTableProps {
   accountId: string
-  posts: PostMetadata[]
+  posts: Array<Post>
   selectedPostId?: string
 }
 
@@ -39,9 +40,9 @@ const columns = [
     // @ts-ignore I can't figure out this type easily
     cell: ({ row }) => <PostsListTableCell row={row.original} />,
     filterFn: 'fuzzy',
-    accessorFn: (row: PostMetadata) => {
+    accessorFn: (row: Post) => {
       // Combine all searchable fields into one string for fuzzy search
-      return `${row.title} ${row.doc_api_name} ${row.categories?.join(' ') || ''}`
+      return `${row.title} ${row.post_key} ${row.categories?.join(' ') || ''}`
     },
   },
 ]
@@ -126,7 +127,7 @@ export function PostsListTable({
                 <tr
                   key={row.id}
                   className={
-                    row.original.doc_api_name === selectedPostId
+                    row.original.post_key === selectedPostId
                       ? 'border-l-2 border-l-primary bg-gray-50'
                       : 'border-l-1 border-l-transparent'
                   }
@@ -137,7 +138,7 @@ export function PostsListTable({
                         to="/$accountId/posts/$postId"
                         params={{
                           accountId,
-                          postId: cell.row.original.doc_api_name,
+                          postId: cell.row.original.post_key,
                         }}
                         className="block w-full"
                       >

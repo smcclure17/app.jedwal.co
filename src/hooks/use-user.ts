@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { fetchUserData } from '@/data/fetchers'
+import { fetchAccountContext, fetchUserData } from '@/data/fetchers'
 
 export function useUserData(accountId?: string) {
   const result = useQuery({
@@ -11,4 +11,12 @@ export function useUserData(accountId?: string) {
   })
 
   return result
+}
+
+export function useAccountContext(accountId: string) {
+  return useQuery({
+    queryKey: ['accountContext', accountId],
+    queryFn: () => fetchAccountContext(accountId),
+    retry: false,
+  })
 }

@@ -1,5 +1,5 @@
-import config from '@/config'
 import { useEffect, useState } from 'react'
+import config from '@/config'
 
 export const useGooglePickerToken = () => {
   const [accessToken, setAccessToken] = useState<string>()

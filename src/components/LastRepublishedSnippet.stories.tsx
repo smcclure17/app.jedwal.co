@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { LastRepublishedSnippet } from './LastRepublishedSnippet'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 // Create a QueryClient for Storybook
 const queryClient = new QueryClient({

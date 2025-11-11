@@ -34,14 +34,6 @@ function NewOrganizationPage() {
     )
   }
 
-  if (user?.type === 'organization') {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-200px)] w-full p-6">
-        <span>Organization accounts cannot create organizations</span>
-      </div>
-    )
-  }
-
   if (user.account_status === "free") {
     return <PremiumRequiredScreen/>
   }

@@ -29,7 +29,7 @@ function DashboardHome() {
   }
 
   const postsCount = posts?.length ?? 0
-  const apisCount = apis?.results.length ?? 0
+  const apisCount = apis?.length ?? 0
   const hasContent = postsCount > 0 || apisCount > 0
 
   // Get user's display name

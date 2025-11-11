@@ -1,6 +1,5 @@
 // src/routes/_dashboard.organizations.index.tsx
-import { useUserData } from '@/hooks/use-user'
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { Link, createFileRoute, useParams } from '@tanstack/react-router'
 import {
   Card,
   CardContent,
@@ -10,6 +9,7 @@ import {
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { OrganizationPreviewCard } from '@/components/organizations/OrganizationPreviewCard'
+import { useOrganizations } from '@/hooks/use-organizations'
 
 export const Route = createFileRoute('/_dashboard/$accountId/organizations/')({
   head: () => ({
@@ -19,17 +19,16 @@ export const Route = createFileRoute('/_dashboard/$accountId/organizations/')({
 })
 
 function OrganizationsListPage() {
-  const { data: user, isLoading } = useUserData()
+  const { accountId } = useParams({ strict: false })
+  const { data: organizations, isLoading } = useOrganizations(accountId)
 
-  if (isLoading || !user) {
+  if (isLoading || !organizations || !accountId) {
     return (
       <div className="container mx-auto py-8">
         <p>Loading...</p>
       </div>
     )
   }
-
-  const organizations = user?.orgs || []
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-200px)] w-full p-6">
@@ -44,7 +43,7 @@ function OrganizationsListPage() {
             </div>
             <Link
               to={'/$accountId/organizations/create'}
-              params={{ accountId: user.id }}
+              params={{ accountId: accountId }}
             >
               <Button>Create New Organization</Button>
             </Link>

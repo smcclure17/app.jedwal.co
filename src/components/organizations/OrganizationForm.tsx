@@ -1,5 +1,7 @@
 import { useState } from 'react'
-import { useNavigate } from '@tanstack/react-router'
+import { useNavigate, useParams } from '@tanstack/react-router'
+import { EmailInviteInput } from './EmailInviteInput'
+import { EmailList } from './EmailList'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -12,24 +14,21 @@ import {
 } from '@/components/ui/card'
 import { useCreateOrganization } from '@/hooks/use-organizations'
 import { useCheckOrgNameAvailable } from '@/hooks/use-check-org-name-available'
-import { EmailInviteInput } from './EmailInviteInput'
-import { EmailList } from './EmailList'
 
 interface OrganizationFormProps {
   userId: string
   onSuccess: (orgName: string) => void
 }
 
-export function OrganizationForm({
-  userId,
-  onSuccess,
-}: OrganizationFormProps) {
+export function OrganizationForm({ userId, onSuccess }: OrganizationFormProps) {
   const navigate = useNavigate()
+  const { accountId } = useParams({ strict: false }) // todo fix: this should be strict
   const [orgName, setOrgName] = useState('')
-  const [emails, setEmails] = useState<string[]>([])
+  const [emails, setEmails] = useState<Array<string>>([])
 
   const createMutation = useCreateOrganization()
-  const { data: isAvailable, isLoading: isCheckingAvailability } = useCheckOrgNameAvailable(orgName)
+  const { data: isAvailable, isLoading: isCheckingAvailability } =
+    useCheckOrgNameAvailable(accountId!, orgName)
 
   const handleCreateSuccess = () => {
     onSuccess(orgName)
@@ -39,7 +38,7 @@ export function OrganizationForm({
     alert('Failed to create new organization. Please try again later')
   }
 
-  const handleAddEmails = (newEmails: string[]) => {
+  const handleAddEmails = (newEmails: Array<string>) => {
     setEmails([...emails, ...newEmails])
   }
 
@@ -53,6 +52,7 @@ export function OrganizationForm({
     if (orgName.trim()) {
       createMutation.mutate(
         {
+          accountId: accountId!,
           name: orgName.trim(),
           emails,
         },
@@ -116,11 +116,14 @@ export function OrganizationForm({
             </Button>
             <Button
               type="submit"
-              disabled={!orgName.trim() || createMutation.isPending || !isAvailable || isCheckingAvailability}
+              disabled={
+                !orgName.trim() ||
+                createMutation.isPending ||
+                !isAvailable ||
+                isCheckingAvailability
+              }
             >
-              {createMutation.isPending
-                ? 'Creating...'
-                : 'Create Organization'}
+              {createMutation.isPending ? 'Creating...' : 'Create Organization'}
             </Button>
           </div>
         </form>

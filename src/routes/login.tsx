@@ -1,5 +1,5 @@
-import { NotLoggedInScreen } from '@/components/NotLoggedInScreen'
 import { createFileRoute } from '@tanstack/react-router'
+import { NotLoggedInScreen } from '@/components/NotLoggedInScreen'
 
 export const Route = createFileRoute('/login')({
   head: () => ({

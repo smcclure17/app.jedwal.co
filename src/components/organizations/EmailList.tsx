@@ -1,7 +1,7 @@
 import { X } from 'lucide-react'
 
 interface EmailListProps {
-  emails: string[]
+  emails: Array<string>
   onRemoveEmail: (email: string) => void
 }
 

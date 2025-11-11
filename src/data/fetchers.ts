@@ -1,33 +1,30 @@
-import config from '@/config'
-import {
+import type {
+  AccountRead,
   ApiInvocationResponse,
-  ApisMetadata,
-  CreatePostResponse,
-  PostsMetadata,
-  UserDataResponse,
+  Post,
+  PostCreateResponse,
 } from '@/schemas'
+import config from '@/config'
 
 export async function fetchPosts(accountId: string) {
-  const url = `${config.api.url}/docs/metadata/${accountId}`
+  const url = `${config.api.url}/manage/${accountId}/posts`
   const response = await fetch(url, { credentials: 'include' })
   if (!response.ok) {
     throw new Error(`Failed to fetch: ${JSON.stringify(response)}`)
   }
-  const json: PostsMetadata = await response.json()
-  return json.apis
+  return response.json() as unknown as Array<Post>
 }
 
 export const createPost = async (
   googleId: string,
   docApiName: string,
-  accountId?: string,
-): Promise<CreatePostResponse> => {
-  const res = await fetch(`${config.api.url}/doc`, {
+  accountId: string,
+): Promise<PostCreateResponse> => {
+  const res = await fetch(`${config.api.url}/manage/${accountId}/posts/`, {
     method: 'POST',
     body: JSON.stringify({
-      google_id: googleId,
-      owner_id: accountId,
-      doc_api_name: docApiName,
+      google_doc_id: googleId,
+      post_key: docApiName,
     }),
     credentials: 'include',
     headers: { 'Content-type': 'application/json' },
@@ -42,28 +39,34 @@ export const createPost = async (
     throw new Error(`Request returned status ${res.status}: ${res.statusText}`)
   }
 
-  return res.json()
+  return res.json() as Promise<PostCreateResponse>
 }
 
 export async function deletePost(accountId: string, postId: string) {
-  const res = await fetch(`${config.api.url}/doc/${accountId}/${postId}`, {
-    method: 'DELETE',
-    credentials: 'include',
-  })
+  const res = await fetch(
+    `${config.api.url}/manage/${accountId}/posts/${postId}`,
+    {
+      method: 'DELETE',
+      credentials: 'include',
+    },
+  )
 
   if (res.status !== 200) throw new Error('Failed to delete post')
 }
 
 export const republishPost = async (accountId: string, postId: string) => {
-  const res = await fetch(`${config.api.url}/doc/publish`, {
-    method: 'POST',
-    body: JSON.stringify({
-      owner_id: accountId,
-      api_name: postId,
-    }),
-    credentials: 'include',
-    headers: { 'Content-type': 'application/json' },
-  })
+  const res = await fetch(
+    `${config.api.url}/manage/${accountId}/posts/${postId}/refresh`,
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        owner_id: accountId,
+        api_name: postId,
+      }),
+      credentials: 'include',
+      headers: { 'Content-type': 'application/json' },
+    },
+  )
 
   if (res.status !== 200) {
     throw new Error(`Failed to republish. Status: ${res.status}`)
@@ -77,22 +80,21 @@ export async function addPostCategory(
   postId: string,
   category: string,
 ) {
-  const res = await fetch(`${config.api.url}/doc/add-category`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      category: category.trim(),
-      owner_id: accountId,
-      api_name: postId,
-    }),
-  })
+  const res = await fetch(
+    `${config.api.url}/manage/${accountId}/posts/${postId}/categories`,
+    {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        category: category.trim(),
+      }),
+    },
+  )
 
   if (!res.ok) {
     throw new Error(`Failed to add category. Status: ${res.status}`)
   }
-
-  return res.json()
 }
 
 export async function removePostCategory(
@@ -101,42 +103,13 @@ export async function removePostCategory(
   category: string,
 ) {
   const res = await fetch(
-    `${
-      config.api.url
-    }/doc/delete-category/${accountId}/${postId}?category=${encodeURIComponent(
-      category,
-    )}`,
+    `${config.api.url}/manage/${accountId}/posts/${postId}/categories/${category}`,
     { method: 'DELETE', credentials: 'include' },
   )
 
   if (!res.ok) {
     throw new Error(`Failed to remove category. Status: ${res.status}`)
   }
-
-  return res.json()
-}
-
-export async function updatePostSlug(
-  accountId: string,
-  postId: string,
-  slug: string,
-) {
-  const res = await fetch(`${config.api.url}/doc/update-slug`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      slug: slug.trim(),
-      owner_id: accountId,
-      api_name: postId,
-    }),
-  })
-
-  if (!res.ok) {
-    throw new Error(`Failed to add category. Status: ${res.status}`)
-  }
-
-  return res.json()
 }
 
 export async function createWebhook(
@@ -182,26 +155,34 @@ export async function deleteWebhook(
   }
 }
 
-export async function getApiAnalytics(accountId: string, apiName: string) {
+export async function getAnalytics(
+  accountId: string,
+  resourceType: string,
+  name: string,
+) {
   const startTime = new Date()
   const thirtyDaysAgo = new Date(startTime)
   thirtyDaysAgo.setDate(startTime.getDate() - 30)
   const dateParam = thirtyDaysAgo.toISOString()
-
-  const res = await fetch(
-    `${config.api.url}/get-api-invocations?sheet_api_name=${apiName}&account_id=${accountId}&start_time=${dateParam}`,
-    { credentials: 'include' },
-  )
+  const url = `${config.api.url}/manage/${accountId}/analytics/${resourceType}/${name}`
+  const res = await fetch(`${url}?start_time=${dateParam}`, {
+    credentials: 'include',
+  })
   if (!res.ok) {
-    throw new Error(`Failed to fetch analytics for ${accountId}/${apiName}`)
+    throw new Error(
+      `Failed to fetch analytics for ${accountId}/${resourceType}/${name}`,
+    )
   }
 
-  return res.json() as Promise<ApiInvocationResponse[]>
+  return res.json() as Promise<Array<ApiInvocationResponse>>
 }
 
 export async function fetchUserData(accountId?: string) {
-  const query = accountId ? `?account_id=${encodeURIComponent(accountId)}` : ''
-  const res = await fetch(`${config.api.url}/get-account-data${query}`, {
+  const meUrl = `${config.api.url}/me`
+  const accountUrl = `${config.api.url}/manage/${accountId}`
+  const url = accountId ? accountUrl : meUrl
+
+  const res = await fetch(url, {
     credentials: 'include',
   })
 
@@ -212,78 +193,18 @@ export async function fetchUserData(accountId?: string) {
     throw new Error(`Failed to fetch account data for ID: ${accountId}`)
   }
 
-  return res.json() as Promise<UserDataResponse>
+  return res.json() as Promise<AccountRead>
 }
 
-export async function fetchApis(accountId: string) {
-  const url = `${config.api.url}/get-all-sheets/${accountId}`
-  const response = await fetch(url, { credentials: 'include' })
-  if (!response.ok) {
-    throw new Error(`Failed to fetch: ${JSON.stringify(response)}`)
-  }
-  return response.json() as Promise<ApisMetadata>
-}
-
-export async function deleteApi(accountId: string, postId: string) {
-  const res = await fetch(
-    `${config.api.url}/delete-api/${accountId}/${postId}`,
-    {
-      method: 'DELETE',
-      credentials: 'include',
-    },
-  )
-
-  if (res.status !== 200) throw new Error('Failed to delete post')
-}
-
-// TODO: fix return type in backend and pipe it through to schemas
-export const createApi = async (
-  googleId: string,
-  accountId?: string,
-): Promise<{ api_name: string; url: string }> => {
-  const res = await fetch(`${config.api.url}/api`, {
-    method: 'POST',
-    body: JSON.stringify({ google_id: googleId, owner_id: accountId }),
-    credentials: 'include',
-    headers: { 'Content-type': 'application/json' },
-  })
-
-  if (res.status === 415) {
-    const message = await res.json()
-    throw new Error(message.detail)
-  }
-
-  if (!res.ok) {
-    throw new Error(`Request returned status ${res.status}: ${res.statusText}`)
-  }
-
-  return res.json()
-}
-
-export const postTtlUpdate = async (
+export async function createOrganization(
   accountId: string,
-  apiName: string,
-  ttl: number,
-) => {
-  const res = await fetch(`${config.api.url}/update-cache-duration`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-    body: JSON.stringify({
-      owner_id: accountId,
-      api_name: apiName,
-      cache_duration: ttl,
-    }),
-  })
-
-  if (res.status !== 200) throw new Error('Failed to delete API')
-}
-
-export async function createOrganization(name: string, invitees: string[]) {
-  const res = await fetch(`${config.api.url}/create-organization`, {
+  name: string,
+  invitees: Array<string>,
+) {
+  const res = await fetch(`${config.api.url}/manage/${accountId}/organizations`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-    body: JSON.stringify({ name, invitees }),
+    body: JSON.stringify({ organization_name: name, memberships: invitees }),
     credentials: 'include',
   })
 
@@ -304,19 +225,49 @@ export const deleteOrganization = async (orgId: string) => {
 }
 
 export const createCheckout = async () => {
-  const response = await fetch(`${config.api.url}/create-checkout`, {
-    method: "POST",
-    credentials: "include",
-  });
+  const response = await fetch(`${config.api.url}/billing/create-checkout`, {
+    method: 'POST',
+    credentials: 'include',
+  })
 
   if (response.status === 401) {
-    throw new Error("User Not Logged In");
+    throw new Error('User Not Logged In')
   }
 
   if (!response.ok) {
-    throw new Error(`Failed to create checkout: ${response.statusText}`);
+    throw new Error(`Failed to create checkout: ${response.statusText}`)
   }
 
-  const { url } = await response.json();
+  const { url } = await response.json()
   return url
-};
+}
+
+export async function getOrganizations(accountId: string) {
+  const url = `${config.api.url}/manage/${accountId}/organizations`
+  const res = await fetch(url, { credentials: 'include' })
+
+  if (res.status !== 200) throw new Error('Failed to fetch organizations')
+  return res.json()
+}
+
+export async function getOrganizationMembers(accountId: string, orgId: string) {
+  const url = `${config.api.url}/manage/${accountId}/organizations/${orgId}/memberships`
+  const res = await fetch(url, { credentials: 'include' })
+
+  if (res.status !== 200)
+    throw new Error('Failed to fetch organization members')
+  return res.json()
+}
+
+export async function fetchAccountContext(accountId: string) {
+  const url = `${config.api.url}/manage/${accountId}`
+  const res = await fetch(url, { credentials: 'include' })
+
+  if (res.status === 403) {
+    return 'not ok'
+  }
+  if (!res.ok) {
+    throw new Error('Failed to fetch account context')
+  }
+  return 'ok'
+}

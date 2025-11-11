@@ -1,5 +1,5 @@
-import { useDeletePost } from '@/hooks/use-posts'
 import { useNavigate } from '@tanstack/react-router'
+import { useDeletePost } from '@/hooks/use-posts'
 
 export interface DeleteDocApiButtonProps {
   accountId: string
@@ -17,7 +17,6 @@ export const DeletePostButton = ({
     const isConfirmed = confirm(
       `Are you sure you want to delete the post /${accountId}/${postId}? This action cannot be undone.`,
     )
-
     if (isConfirmed) {
       mutation.mutate(postId, {
         onSuccess: () => {

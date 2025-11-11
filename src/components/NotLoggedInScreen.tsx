@@ -1,5 +1,5 @@
-import { GoogleSignInButton } from './GoogleSignInButton'
 import { Image } from '@unpic/react'
+import { GoogleSignInButton } from './GoogleSignInButton'
 
 export interface NotLoggedInScreenProps {
   message?: string

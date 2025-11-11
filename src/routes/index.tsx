@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useUserData } from '@/hooks/use-user'
 import { useEffect } from 'react'
+import { useUserData } from '@/hooks/use-user'
 import { Spinner } from '@/components/Spinner'
 import { NotLoggedInScreen } from '@/components/NotLoggedInScreen'
 

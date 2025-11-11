@@ -1,13 +1,13 @@
-import { FileText, ArrowRight, Database } from 'lucide-react'
+import { ArrowRight, Database, FileText } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
 import { Button } from '../ui/button'
 import {
   Card,
+  CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
 } from '../ui/card'
-import { Link } from '@tanstack/react-router'
 
 interface GetStartedScreenProps {
   accountId: string

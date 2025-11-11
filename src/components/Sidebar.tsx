@@ -1,30 +1,38 @@
-import { useAuth } from '@/contexts/AuthContext'
 import { Link, useNavigate, useParams } from '@tanstack/react-router'
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
-  FileText,
-  Plug2,
+  Building2,
   Check,
   ChevronsUpDown,
-  Sparkles,
   CreditCard,
+  FileText,
   LogOut,
-  Building2,
-  PanelLeftClose,
   PanelLeft,
+  PanelLeftClose,
+  Plug2,
+  Sparkles,
 } from 'lucide-react'
-import { useUserData } from '@/hooks/use-user'
-import { Badge } from './ui/badge'
-import config from '@/config'
-import { LogoLink } from './LogoLink'
 import { Image } from '@unpic/react'
+import { Badge } from './ui/badge'
+import { LogoLink } from './LogoLink'
+import { useUserData } from '@/hooks/use-user'
+import config from '@/config'
+import { useAuth } from '@/contexts/AuthContext'
+import { useOrganizations } from '@/hooks/use-organizations'
 
 export function Sidebar() {
   const { user, error } = useAuth()
 
-  const { data: individualUser, isLoading } = useUserData()
+  // Always fetch the underlying user's data (not the current account's data)
+  // Pass undefined to always get the authenticated user
+  const { data: individualUser, isLoading } = useUserData(undefined)
 
   const { accountId } = useParams({ strict: false })
+
+  // Always fetch organizations for the underlying user, not the current account
+  // Use individualUser?.id to ensure we're fetching the real user's orgs
+  const { data: organizations } = useOrganizations(individualUser?.id)
+
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false)
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -115,15 +123,15 @@ export function Sidebar() {
           id: individualUser.id,
           name: individualUser.display_name,
           email: individualUser.email,
-          type: individualUser.type,
           isPremium: individualUser.account_status === 'premium',
+          type: 'personal' as const,
         },
-        ...(individualUser.orgs?.map((org: any) => ({
+        ...(organizations?.map((org: any) => ({
           id: org.account_id,
           name: org.display_name || org.name,
           email: org.email,
-          type: 'organization',
           isPremium: org.account_status === 'premium',
+          type: 'organization' as const,
         })) || []),
       ]
     : []
@@ -224,7 +232,6 @@ export function Sidebar() {
                       onClick={() => {
                         setSelectedAccountId(account.id)
                         setIsAccountMenuOpen(false)
-                        // Navigate to the home page of the selected account
                         navigate({
                           to: '/$accountId',
                           params: { accountId: account.id },
@@ -370,19 +377,23 @@ export function Sidebar() {
 
                 {/* Menu Items */}
                 <div className="py-1">
-                  {individualUser?.account_status === 'premium' ? <a
-                    href={`https://billing.stripe.com/p/login/${config.stripe.billingPortalId}`}
-                    className="w-full flex items-center gap-3 px-3 py-2 hover:bg-accent text-left transition-colors text-sm"
-                  >
-                    <CreditCard className="h-4 w-4" />
-                    Billing Portal
-                  </a> : <a
-                    href={`https://jedwal.co/pricing`}
-                    className="w-full flex items-center gap-3 px-3 py-2 hover:bg-accent text-left transition-colors text-sm"
-                  >
-                    <CreditCard className="h-4 w-4" />
-                    Upgrade Now
-                  </a> }
+                  {individualUser?.account_status === 'premium' ? (
+                    <a
+                      href={`https://billing.stripe.com/p/login/${config.stripe.billingPortalId}`}
+                      className="w-full flex items-center gap-3 px-3 py-2 hover:bg-accent text-left transition-colors text-sm"
+                    >
+                      <CreditCard className="h-4 w-4" />
+                      Billing Portal
+                    </a>
+                  ) : (
+                    <a
+                      href={`https://jedwal.co/pricing`}
+                      className="w-full flex items-center gap-3 px-3 py-2 hover:bg-accent text-left transition-colors text-sm"
+                    >
+                      <CreditCard className="h-4 w-4" />
+                      Upgrade Now
+                    </a>
+                  )}
                   <a
                     href={`${config.api.url}/logout`}
                     className="w-full flex items-center gap-3 px-3 py-2 hover:bg-accent text-left transition-colors text-sm"

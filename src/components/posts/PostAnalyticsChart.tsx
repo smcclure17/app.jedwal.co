@@ -1,16 +1,18 @@
-import { useApiAnalytics } from '@/hooks/use-apis'
 import { AnalyticsChartInternals } from '../AnalyticsChartInternals'
+import { useAnalytics } from '@/hooks/use-apis'
 
 export interface PostAnalyticsChartProps {
   accountId: string
+  resourceType: 'api' | 'post'
   postId: string
 }
 
-export function PostAnalyticsChart({
+export function AnalyticsChart({
   accountId,
+  resourceType,
   postId,
 }: PostAnalyticsChartProps) {
-  const { data: analyticRows, isLoading } = useApiAnalytics(accountId, postId)
+  const { data: analyticRows, isLoading } = useAnalytics(accountId, resourceType, postId)
 
   if (isLoading || analyticRows === undefined) return <></>
   return (

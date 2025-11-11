@@ -1,10 +1,10 @@
 // src/routes/_dashboard.$accountId.posts.tsx
+import { Outlet, createFileRoute, useParams } from '@tanstack/react-router'
 import { ApisList } from '@/components/apis/ApisList'
 import { CreateApiForm } from '@/components/apis/CreateApiForm'
 import { FirstApiSplash } from '@/components/apis/FirstApiSplash'
 import { ApisLayoutSkeleton } from '@/components/apis/ApisLayoutSkeleton'
 import { useApis } from '@/hooks/use-apis'
-import { createFileRoute, Outlet, useParams } from '@tanstack/react-router'
 import { useUserData } from '@/hooks/use-user'
 
 export const Route = createFileRoute('/_dashboard/$accountId/apis')({
@@ -27,7 +27,7 @@ function PostsLayout() {
     return <ApisLayoutSkeleton />
   }
 
-  if (posts.results.length === 0) {
+  if (posts.length === 0) {
     return (
       <div className="flex flex-1 items-center justify-center pt-10">
         <FirstApiSplash accountId={accountId} />
@@ -35,7 +35,7 @@ function PostsLayout() {
     )
   }
 
-  const disableCreate = user?.account_status === 'free' && posts.results.length >= 2
+  const disableCreate = user?.account_status === 'free' && posts.length >= 2
 
   return (
     <div>
@@ -46,7 +46,7 @@ function PostsLayout() {
             <ApisList
               accountId={accountId}
               selectedPostId={apiId}
-              posts={posts ?? { results: [], failures: [] }}
+              posts={posts ?? []}
               showPremiumCard={disableCreate}
             />
           </div>

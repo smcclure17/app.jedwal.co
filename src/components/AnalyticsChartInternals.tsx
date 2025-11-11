@@ -1,12 +1,11 @@
-import { useCallback, useRef, useState } from 'react'
-import React from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { LinePath } from '@visx/shape'
-import { scaleTime, scaleLinear } from '@visx/scale'
+import { scaleLinear, scaleTime } from '@visx/scale'
 import { extent, max } from 'd3-array'
 import { voronoi } from '@visx/voronoi'
 import { localPoint } from '@visx/event'
 import { AxisBottom, AxisLeft } from '@visx/axis'
-import { ApiInvocationResponse } from '@/schemas'
+import type { ApiInvocationResponse } from '@/schemas'
 
 export interface AnalyticsLineChartProps {
   data: Array<ApiInvocationResponse>
@@ -17,7 +16,7 @@ interface DailyPoint {
   count: number
 }
 
-const groupByDay = (data: ApiInvocationResponse[]) => {
+const groupByDay = (data: Array<ApiInvocationResponse>) => {
   const dailyCounts: Record<string, number> = {}
   data.forEach((d) => {
     const day = d.timestamp.split('T')[0] // Extract the date part
@@ -42,7 +41,7 @@ const generateEmptyLastDays = (numDays: number) => {
   return days
 }
 
-const mergeWithLast7Days = (groupedData: { date: Date; count: number }[]) => {
+const mergeWithLast7Days = (groupedData: Array<{ date: Date; count: number }>) => {
   const last7Days = generateEmptyLastDays(7)
   const groupedDataMap = new Map(
     groupedData.map((d) => [d.date.toISOString().split('T')[0], d.count]),
@@ -131,8 +130,8 @@ export const AnalyticsChartInternals = ({ data }: AnalyticsLineChartProps) => {
       >
         <LinePath
           data={groupedData}
-          x={(d) => xScale(d.date)!}
-          y={(d) => yScale(d.count)!}
+          x={(d) => xScale(d.date)}
+          y={(d) => yScale(d.count)}
           stroke="#439773"
           strokeWidth={2}
         />

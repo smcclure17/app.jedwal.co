@@ -4,6 +4,26 @@
  */
 
 export interface paths {
+    "/health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Health Check
+         * @description Health check endpoint.
+         */
+        get: operations["health_check_health_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/login": {
         parameters: {
             query?: never;
@@ -13,8 +33,7 @@ export interface paths {
         };
         /**
          * Login
-         * @description Start the OAuth login flow with Google.
-         *     Redirects to Google for authentication.
+         * @description Initiate OAuth flow with Google.
          */
         get: operations["login_login_get"];
         put?: never;
@@ -34,8 +53,7 @@ export interface paths {
         };
         /**
          * Auth
-         * @description Handle the OAuth callback from Google.
-         *     Stores user information in the session.
+         * @description OAuth callback - complete authentication.
          */
         get: operations["auth_auth_get"];
         put?: never;
@@ -53,10 +71,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * Logout
-         * @description Log out the user by clearing their session.
-         */
+        /** Logout */
         get: operations["logout_logout_get"];
         put?: never;
         post?: never;
@@ -66,25 +81,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/google-picker-token": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Token */
-        get: operations["get_token_google_picker_token_get"];
-        put?: never;
-        /** Save Token */
-        post: operations["save_token_google_picker_token_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/get-account-data": {
+    "/me": {
         parameters: {
             query?: never;
             header?: never;
@@ -92,13 +89,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Account Data
-         * @description Get information about the currently authenticated user.
-         *
-         *     Returns:
-         *         UserDataResponse: User profile and account information
+         * Get Me
+         * @description Get current authenticated account
          */
-        get: operations["get_account_data_get_account_data_get"];
+        get: operations["get_me_me_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -107,7 +101,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/unsubscribe": {
+    "/email/unsubscribe": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Unsubscribe */
+        get: operations["unsubscribe_email_unsubscribe_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/manage/{account_id}/": {
         parameters: {
             query?: never;
             header?: never;
@@ -115,44 +126,23 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Unsubscribe
-         * @description Unsubscribe a user from emails.
-         *
-         *     Args:
-         *         user_id: The ID of the user to unsubscribe
-         *         email: The email address to unsubscribe (used if user_id is not provided)
-         *         redirect: If True, redirect to a confirmation page; otherwise return JSON
-         *
-         *     Returns:
-         *         JSON response or redirect to confirmation page
+         * Get
+         * @description Get account details for the authenticated user.
          */
-        get: operations["unsubscribe_unsubscribe_get"];
+        get: operations["get_manage__account_id___get"];
         put?: never;
         post?: never;
-        delete?: never;
+        /**
+         * Delete Account Endpoint
+         * @description Delete the authenticated user's account.
+         */
+        delete: operations["delete_account_endpoint_manage__account_id___delete"];
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/{owner_id}/{sheet_api_name}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Read Sheet V2 */
-        get: operations["read_sheet_v2_api__owner_id___sheet_api_name__get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/get-all-sheets/{owner_id}": {
+    "/manage/{account_id}/apis/{api_id}/worksheets": {
         parameters: {
             query?: never;
             header?: never;
@@ -160,10 +150,13 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Sheets Metadata V2
-         * @description Get all sheets owned by the current user (personal sheets only).
+         * Get Worksheets For Api
+         * @description Get all worksheet names for an API from cache.
+         *
+         *     Returns only worksheets that have been accessed at least once.
+         *     For a complete list including never-accessed sheets, fetch directly from Google.
          */
-        get: operations["get_sheets_metadata_v2_get_all_sheets__owner_id__get"];
+        get: operations["get_worksheets_for_api_manage__account_id__apis__api_id__worksheets_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -172,102 +165,34 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api": {
+    "/manage/{account_id}/apis": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get?: never;
-        put?: never;
-        /** Create Api V2 */
-        post: operations["create_api_v2_api_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/delete-api/{owner_id}/{sheet_api_name}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** Delete Api V2 */
-        delete: operations["delete_api_v2_delete_api__owner_id___sheet_api_name__delete"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/update-cache-duration": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Update Cache Duration V2 */
-        post: operations["update_cache_duration_v2_update_cache_duration_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/create-organization": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
+        /**
+         * Get Apis For Account
+         * @description Get all APIs for an account.
+         */
+        get: operations["get_apis_for_account_manage__account_id__apis_get"];
         put?: never;
         /**
-         * Create Organization
-         * @description Create a new organization.
-         *     The current user will automatically be added as an admin of the organization.
+         * Create Api
+         * @description Create a new API endpoint for a Google Sheet.
          *
-         *     Args:
-         *         name: The name of the organization
-         *
-         *     Returns:
-         *         OrganizationResponse: The newly created organization
+         *     The account_id from the path determines the owner of the API.
+         *     User must have permissions to manage this account (self or org).
          */
-        post: operations["create_organization_create_organization_post"];
+        post: operations["create_api_manage__account_id__apis_post"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/invite-users-to-organization": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Invite Users */
-        post: operations["invite_users_invite_users_to_organization_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/organization/{org_id}": {
+    "/manage/{account_id}/apis/{api_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -278,77 +203,20 @@ export interface paths {
         put?: never;
         post?: never;
         /**
-         * Delete Organization
-         * @description Delete an organization.
-         *     This will delete the organization, all its memberships and sheets.
-         *     Only organization admins can delete an organization.
-         *
-         *     Args:
-         *         org_id: The ID of the organization to delete
-         *
-         *     Returns:
-         *         dict: Confirmation message
+         * Delete Api
+         * @description Delete an API endpoint.
          */
-        delete: operations["delete_organization_organization__org_id__delete"];
+        delete: operations["delete_api_manage__account_id__apis__api_id__delete"];
         options?: never;
         head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/get-api-invocations": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
         /**
-         * Get Sheet Invocations
-         * @description Get API invocation logs for a specific sheet.
-         *
-         *     Args:
-         *         api_name: Name of the API
-         *         start_time: ISO-8601 formatted start time for log retrieval
-         *
-         *     Returns:
-         *         List of invocation logs
+         * Update Api
+         * @description Update an API with partial updates.
          */
-        get: operations["get_sheet_invocations_get_api_invocations_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
+        patch: operations["update_api_manage__account_id__apis__api_id__patch"];
         trace?: never;
     };
-    "/get-api-invocations-total": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Sheet Invocations Total
-         * @description Get the total count of API invocations for a specific sheet.
-         *
-         *     Args:
-         *         sheet_api_id: ID of the API
-         *
-         *     Returns:
-         *         Total count of invocations
-         */
-        get: operations["get_sheet_invocations_total_get_api_invocations_total_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/stripe-webhook": {
+    "/manage/{account_id}/apis/{api_id}/refresh-title": {
         parameters: {
             query?: never;
             header?: never;
@@ -358,28 +226,301 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Webhook Received
+         * Refresh Spreadsheet Title
+         * @description Manually refresh the spreadsheet title from Google Sheets.
+         */
+        post: operations["refresh_spreadsheet_title_manage__account_id__apis__api_id__refresh_title_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/manage/{account_id}/posts/{post_key}/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Categories For Post
+         * @description Get all categories for a specific post.
+         */
+        get: operations["get_categories_for_post_manage__account_id__posts__post_key__categories_get"];
+        put?: never;
+        /**
+         * Add Category To Post
+         * @description Add a category to a post.
+         */
+        post: operations["add_category_to_post_manage__account_id__posts__post_key__categories_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/manage/{account_id}/posts/{post_key}/categories/{category}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Remove Category From Post
+         * @description Remove a category from a post.
+         */
+        delete: operations["remove_category_from_post_manage__account_id__posts__post_key__categories__category__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/manage/{account_id}/posts/{post_id}/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Refresh Post Data */
+        post: operations["refresh_post_data_manage__account_id__posts__post_id__refresh_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/manage/{account_id}/posts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Posts For Account
+         * @description Get all APIs for an account.
+         */
+        get: operations["get_posts_for_account_manage__account_id__posts_get"];
+        put?: never;
+        /**
+         * Create Post
+         * @description Create a new API endpoint for a Google Sheet.
+         *
+         *     The account_id from the path determines the owner of the API.
+         *     User must have permissions to manage this account (self or org).
+         */
+        post: operations["create_post_manage__account_id__posts_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/manage/{account_id}/posts/{post_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Delete Api
+         * @description Delete an API endpoint.
+         */
+        delete: operations["delete_api_manage__account_id__posts__post_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/manage/{account_id}/organizations/{org_id}/memberships": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Memberships For Organization
+         * @description Get all memberships for an org/account.
+         */
+        get: operations["get_memberships_for_organization_manage__account_id__organizations__org_id__memberships_get"];
+        put?: never;
+        /** Create Memberships */
+        post: operations["create_memberships_manage__account_id__organizations__org_id__memberships_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/manage/{account_id}/organizations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Organization
+         * @description Get all memberships for an org/account.
+         */
+        get: operations["get_organization_manage__account_id__organizations_get"];
+        put?: never;
+        /** Create Organization */
+        post: operations["create_organization_manage__account_id__organizations_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/manage/{account_id}/organizations/{org_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Organization
+         * @description Get all memberships for an org/account.
+         */
+        get: operations["get_organization_manage__account_id__organizations__org_id__get"];
+        put?: never;
+        post?: never;
+        /** Delete Organization */
+        delete: operations["delete_organization_manage__account_id__organizations__org_id__delete"];
+        options?: never;
+        /**
+         * Head Organization
+         * @description Get all memberships for an org/account.
+         */
+        head: operations["head_organization_manage__account_id__organizations__org_id__head"];
+        patch?: never;
+        trace?: never;
+    };
+    "/manage/{account_id}/analytics/{resource_type}/{resource_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Resource Analytics
+         * @description Get analytics logs for a specific API or Post within a time range.
+         */
+        get: operations["get_resource_analytics_manage__account_id__analytics__resource_type___resource_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/{account_id}/apis/{api_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Api Data
+         * @description Get data from a sheet API endpoint.
+         */
+        get: operations["get_api_data__account_id__apis__api_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/{account_id}/posts/{post_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Post Data
+         * @description Get data from a sheet API endpoint.
+         */
+        get: operations["get_post_data__account_id__posts__post_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        /**
+         * Head Post Data
+         * @description Check if a post exists without returning its data.
+         */
+        head: operations["head_post_data__account_id__posts__post_id__head"];
+        patch?: never;
+        trace?: never;
+    };
+    "/{account_id}/posts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Public Posts For Account
+         * @description Get all APIs for an account.
+         */
+        get: operations["get_public_posts_for_account__account_id__posts_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/billing/stripe-webhook": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Stripe Webhook
          * @description Handle Stripe webhook events.
          *
          *     Processes events such as:
          *     - checkout.session.completed: Upgrade user to premium
+         *     - invoice.paid: Update billing period for renewal
          *     - customer.subscription.deleted: Downgrade user from premium
-         *
-         *     Args:
-         *         request: The request object containing the webhook payload
-         *         stripe_signature: Stripe signature for verifying the webhook
-         *
-         *     Returns:
-         *         dict: Status response
          */
-        post: operations["webhook_received_stripe_webhook_post"];
+        post: operations["stripe_webhook_billing_stripe_webhook_post"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/create-checkout": {
+    "/billing/create-checkout": {
         parameters: {
             query?: never;
             header?: never;
@@ -388,8 +529,13 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Create Checkout Session */
-        post: operations["create_checkout_session_create_checkout_post"];
+        /**
+         * Create Checkout
+         * @description Create a Stripe checkout session for premium subscription.
+         *
+         *     Returns a URL to redirect the user to Stripe's checkout page.
+         */
+        post: operations["create_checkout_billing_create_checkout_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -404,193 +550,13 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Homepage
-         * @description Render simple homepage
+         * Root
+         * @description Root endpoint.
          */
-        get: operations["homepage__get"];
+        get: operations["root__get"];
         put?: never;
         post?: never;
         delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/doc/{owner_id}/{api_name}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Doc */
-        get: operations["get_doc_doc__owner_id___api_name__get"];
-        put?: never;
-        post?: never;
-        /** Delete Doc */
-        delete: operations["delete_doc_doc__owner_id___api_name__delete"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/doc": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Create Doc */
-        post: operations["create_doc_doc_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/docs/metadata/{owner_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Apis Metadata
-         * @description Get all sheets owned by the current user (personal sheets only).
-         */
-        get: operations["get_apis_metadata_docs_metadata__owner_id__get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/docs/{owner_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Public Apis
-         * @description Get all sheets owned by the current user (personal sheets only).
-         */
-        get: operations["get_public_apis_docs__owner_id__get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/doc/publish": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Update Content
-         * @description Publish/update the google doc content to your API
-         */
-        post: operations["update_content_doc_publish_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/doc/add-category": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Add Category */
-        post: operations["add_category_doc_add_category_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/doc/delete-category/{owner_id}/{api_name}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** Add Category */
-        delete: operations["add_category_doc_delete_category__owner_id___api_name__delete"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/doc/update-slug": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Update Doc Slug */
-        post: operations["update_doc_slug_doc_update_slug_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/doc/add-webhook": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Add Webhook */
-        post: operations["add_webhook_doc_add_webhook_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/doc/delete-webhook": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** Delete Webhook */
-        delete: operations["delete_webhook_doc_delete_webhook_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -600,321 +566,369 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /**
-         * AddCategoryToDocRequest
-         * @description Request model for adding category to a Doc API
-         */
-        AddCategoryToDocRequest: {
-            /** Owner Id */
-            owner_id: string;
-            /** Api Name */
-            api_name: string;
-            /** Category */
-            category: string;
-        };
-        /** AddWebhookToDocApiRequest */
-        AddWebhookToDocApiRequest: {
-            /** Owner Id */
-            owner_id: string;
-            /** Api Name */
-            api_name: string;
-            webhook: components["schemas"]["WebhookIntegrationRequestObject"];
-        };
-        /** ApiInvocationResponse */
-        ApiInvocationResponse: {
-            /** Sheet Api Id */
-            sheet_api_id: string;
-            /** Path */
-            path: string;
-            /** Timestamp */
-            timestamp: string;
-            /** Status Code */
-            status_code: number;
-        };
-        /** Body_create_api_v2_api_post */
-        Body_create_api_v2_api_post: {
-            /** Google Id */
-            google_id: string;
-            /** Owner Id */
-            owner_id?: string | null;
-        };
-        /** Body_create_doc_doc_post */
-        Body_create_doc_doc_post: {
-            /** Google Id */
-            google_id: string;
-            /** Owner Id */
-            owner_id?: string | null;
-        };
-        /** Body_invite_users_invite_users_to_organization_post */
-        Body_invite_users_invite_users_to_organization_post: {
-            /** Org Id */
-            org_id: string;
-            /** User Emails */
-            user_emails: string[];
-        };
-        /** Body_save_token_google_picker_token_post */
-        Body_save_token_google_picker_token_post: {
-            /** Token */
-            token: unknown;
-            /** Expires In */
-            expires_in: unknown;
-        };
-        /** CreateDocResponse */
-        CreateDocResponse: {
-            /** Url */
-            url: string;
-            /** Post Id */
-            post_id: string;
-        };
-        /**
-         * CreateOrganizationRequest
-         * @description Request model for creating an organization
-         */
-        CreateOrganizationRequest: {
-            /** Name */
-            name: string;
-            /** Invitees */
-            invitees: string[];
-        };
-        /** DeleteWebhookToDocApiRequest */
-        DeleteWebhookToDocApiRequest: {
-            /** Owner Id */
-            owner_id: string;
-            /** Api Name */
-            api_name: string;
-            /** Url */
-            url: string;
-        };
-        /** DocApiContentResponse */
-        DocApiContentResponse: {
-            /** Content */
-            content: string;
-            /** Title */
-            title: string;
-            /** Published At */
-            published_at?: string | null;
-            /** Creator */
-            creator?: string | null;
-        };
-        /** DocApiResponse */
-        DocApiResponse: {
-            /** Doc Api Name */
-            doc_api_name: string;
-            /** Owner Id */
-            owner_id: string;
-            /** Google Doc Id */
-            google_doc_id: string;
-            /**
-             * Frozen
-             * @default false
-             */
-            frozen: boolean;
-            /** Created At */
-            created_at: string;
-            /** Title */
-            title: string;
-            /** Last Modified */
-            last_modified: string;
-            /** Categories */
-            categories?: string[] | null;
-            /** Slug */
-            slug?: string | null;
-            /** Webhooks */
-            webhooks: components["schemas"]["WebhookIntegration"][] | null;
-        };
-        /** DocsMetadataResponse */
-        DocsMetadataResponse: {
-            /** Apis */
-            apis: components["schemas"]["DocApiResponse"][];
-        };
-        /** GetAllSheetsResponse */
-        GetAllSheetsResponse: {
-            /** Results */
-            results: components["schemas"]["SheetMetadata"][];
-            /** Failures */
-            failures: components["schemas"]["SheetMetadataFailure"][];
-        };
-        /** HTTPValidationError */
-        HTTPValidationError: {
-            /** Detail */
-            detail?: components["schemas"]["ValidationError"][];
-        };
-        /**
-         * OrganizationResponse
-         * @description Response model for organization data
-         */
-        OrganizationResponse: {
+        /** AccountRead */
+        AccountRead: {
             /** Id */
             id: string;
-            /** Name */
-            name: string;
-            /** Created At */
-            created_at: string;
-            /** Created By */
-            created_by: string;
-        };
-        /**
-         * PublishDocApiRequest
-         * @description Update Doc API content to match Google Doc
-         */
-        PublishDocApiRequest: {
-            /** Owner Id */
-            owner_id: string;
-            /** Api Name */
-            api_name: string;
-        };
-        /**
-         * SheetMetadata
-         * @description Public-facing API response model for sheet metadata
-         */
-        SheetMetadata: {
-            /** Sheet Api Name */
-            sheet_api_name: string;
-            /** Owner Id */
-            owner_id: string;
-            /** Created At */
-            created_at: string;
-            /** Spreadsheet Title */
-            spreadsheet_title: string;
-            /** Google Sheet Id */
-            google_sheet_id: string;
-            /** Cache Duration */
-            cache_duration: number;
-            /**
-             * Frozen
-             * @default false
-             */
-            frozen: boolean;
-            /**
-             * Worksheets
-             * @default []
-             */
-            worksheets: string[];
-        };
-        /** SheetMetadataFailure */
-        SheetMetadataFailure: {
-            /** Sheet Api Name */
-            sheet_api_name: string;
-            /** Google Sheet Id */
-            google_sheet_id: string;
-            /** Hint */
-            hint: string;
-        };
-        /**
-         * UpdateApiTtlRequest
-         * @description Request model for updating API TTL
-         */
-        UpdateApiTtlRequest: {
-            /** Owner Id */
-            owner_id: string;
-            /** Api Name */
-            api_name: string;
-            /**
-             * Cache Duration
-             * @description Cache duration in seconds, minimum 1 second
-             */
-            cache_duration: number;
-        };
-        /**
-         * UpdateApiTtlResponse
-         * @description Response model for updating API TTL
-         */
-        UpdateApiTtlResponse: {
-            /** Message */
-            message: string;
-        };
-        /**
-         * UpdateDocApiSlugRequest
-         * @description Request model for changing the slug for a Doc API
-         */
-        UpdateDocApiSlugRequest: {
-            /** Owner Id */
-            owner_id: string;
-            /** Api Name */
-            api_name: string;
-            /** Slug */
-            slug: string;
-        };
-        /**
-         * UserDataResponse
-         * @description Public-facing API response model for user data
-         */
-        UserDataResponse: {
-            /** Id */
-            id: string;
-            /**
-             * Account Status
-             * @enum {string}
-             */
-            account_status: "free" | "premium";
+            /** Account Status */
+            account_status: string;
             /** Display Name */
             display_name: string;
             /**
              * Email
-             * Format: email
+             * @description Email exists for users, not orgs.
              */
-            email: string;
-            /** Orgs */
-            orgs: unknown[];
+            email: string | null;
+        };
+        /** AnalyticsLogRead */
+        AnalyticsLogRead: {
+            /** Owner Id */
+            owner_id: string;
+            /** Resource Id */
+            resource_id: string;
             /**
-             * Type
+             * Resource Type
              * @enum {string}
              */
-            type: "user" | "organization";
+            resource_type: "api" | "post";
+            /** Status Code */
+            status_code: number;
+            /** Cache Result */
+            cache_result: string;
+            /** Path */
+            path: string;
+            /**
+             * Timestamp
+             * Format: date-time
+             */
+            timestamp: string;
+            /** Request Id */
+            request_id: string;
+        };
+        /** ApiCreateRead */
+        ApiCreateRead: {
+            /**
+             * Api Key
+             * @description ID of the newly created API.
+             */
+            api_key: string;
+        };
+        /**
+         * ApiCreateRequest
+         * @description Schema for API creation request from client.
+         *
+         *     Note: owner_id comes from the path parameter, not the request body.
+         */
+        ApiCreateRequest: {
+            /**
+             * Google Sheet Id
+             * @description Google Sheet ID this API serves
+             */
+            google_sheet_id: string;
+            /**
+             * Frozen
+             * @description Whether API is frozen/disabled
+             * @default false
+             */
+            frozen: boolean;
+            /**
+             * Cache Duration
+             * @description Cache duration in seconds for API responses
+             */
+            cache_duration: number;
+        };
+        /**
+         * ApiRead
+         * @description Schema for returning API data to clients.
+         */
+        ApiRead: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at?: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at?: string;
+            /**
+             * Google Sheet Id
+             * @description Google Sheet ID this API serves
+             */
+            google_sheet_id: string;
+            /**
+             * Frozen
+             * @description Whether API is frozen/disabled
+             * @default false
+             */
+            frozen: boolean;
+            /**
+             * Cache Duration
+             * @description Cache duration in seconds for API responses
+             */
+            cache_duration: number;
+            /**
+             * Api Key
+             * @description Unique API key identifier
+             */
+            api_key: string;
+            /**
+             * Owner Id
+             * @description Account ID of the owner
+             */
+            owner_id: string;
+            /**
+             * Spreadsheet Title
+             * @description Cached title of the Google Spreadsheet
+             */
+            spreadsheet_title?: string | null;
+        };
+        /** ApiSpreadsheetDataRead */
+        ApiSpreadsheetDataRead: {
+            /** Title */
+            title: string;
+            /** Sheet Id */
+            sheet_id: string;
+            /** Data */
+            data: Array<{
+                [key: string]: unknown;
+            }>;
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+        };
+        /**
+         * ApiUpdate
+         * @description Schema for updating an API - all fields optional for partial updates.
+         */
+        ApiUpdate: {
+            /** Cache Duration */
+            cache_duration?: number | null;
+        };
+        /**
+         * CategoryCreate
+         * @description Schema for adding a category to a post.
+         */
+        CategoryCreate: {
+            /**
+             * Category
+             * @description Category name to add
+             */
+            category: string;
+        };
+        /**
+         * CategoryRead
+         * @description Schema for returning category information.
+         */
+        CategoryRead: {
+            /**
+             * Category
+             * @description Category name
+             */
+            category: string;
+        };
+        /**
+         * CheckoutSession
+         * @description Checkout session response.
+         */
+        CheckoutSession: {
+            /** Url */
+            url: string;
+        };
+        /** HTTPValidationError */
+        HTTPValidationError: {
+            /** Detail */
+            detail?: Array<components["schemas"]["ValidationError"]>;
+        };
+        /** MembershipCreate */
+        MembershipCreate: {
+            /**
+             * Member Type
+             * @description Role the account has in the org.
+             * @enum {string}
+             */
+            member_type: "owner" | "member";
+            /**
+             * Email
+             * Format: email
+             * @description The email of the user to invite.
+             */
+            email: string;
+        };
+        /** MembershipCreateRequest */
+        MembershipCreateRequest: {
+            /** Memberships */
+            memberships: Array<components["schemas"]["MembershipCreate"]>;
+        };
+        /**
+         * MembershipRead
+         * @description Membership item for public reads
+         */
+        MembershipRead: {
+            /**
+             * Account Id
+             * @description The account in the org
+             */
+            account_id: string;
+            /**
+             * Organization Id
+             * @description The org the account belongs to
+             */
+            organization_id: string;
+            /**
+             * Member Type
+             * @description Role the account has in the org.
+             * @enum {string}
+             */
+            member_type: "owner" | "member";
+            /**
+             * Joined At
+             * Format: date-time
+             * @description When the account joined the org
+             */
+            joined_at: string;
+        };
+        /**
+         * Organization
+         * @description Organization domain model
+         */
+        Organization: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at?: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at?: string;
+            /**
+             * Account Id
+             * @description Unique org/account identifier
+             */
+            account_id: string;
+            /**
+             * Display Name
+             * @description User display name
+             */
+            display_name: string;
+            /**
+             * Account Status
+             * @description Account status
+             * @enum {string}
+             */
+            account_status: "free" | "premium";
+            /**
+             * Billing Account Id
+             * @description ID of the account used for billing
+             */
+            billing_account_id: string;
+        };
+        /** OrganizationCreateRequest */
+        OrganizationCreateRequest: {
+            /**
+             * Organization Name
+             * @description The name of the organization to create
+             */
+            organization_name: string;
+            /**
+             * Memberships
+             * @description Account emails to invite
+             */
+            memberships: Array<string>;
+        };
+        /** PostCreateRead */
+        PostCreateRead: {
+            /**
+             * Post Key
+             * @description Post ID of the newly created post.
+             */
+            post_key: string;
+        };
+        /** PostCreateRequest */
+        PostCreateRequest: {
+            /**
+             * Post Key
+             * @description The name/ID/slug of the post
+             */
+            post_key: string;
+            /**
+             * Google Doc Id
+             * @description The Google Doc ID to create a post from
+             */
+            google_doc_id: string;
+        };
+        /** PostDocumentDataRead */
+        PostDocumentDataRead: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at?: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at?: string;
+            /** Title */
+            title: string;
+            /** Document Id */
+            document_id: string;
+            /**
+             * Content
+             * @description The post data content.
+             */
+            content: string;
+        };
+        /** PostRead */
+        PostRead: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at?: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at?: string;
+            /** Post Key */
+            post_key: string;
+            /** Owner Id */
+            owner_id: string;
+            /** Title */
+            title: string;
+            /** Google Doc Id */
+            google_doc_id: string;
+            /**
+             * Categories
+             * @description Post categories
+             */
+            categories?: Array<string> | null;
         };
         /** ValidationError */
         ValidationError: {
             /** Location */
-            loc: (string | number)[];
+            loc: Array<string | number>;
             /** Message */
             msg: string;
             /** Error Type */
             type: string;
         };
-        /** WebhookIntegration */
-        WebhookIntegration: {
-            /** Url */
-            url: string;
-            /**
-             * Method
-             * @enum {string}
-             */
-            method: "GET" | "POST";
-            /** Payload */
-            payload: {
-                [key: string]: unknown;
-            };
-            /** Name */
-            name?: string | null;
-        };
         /**
-         * WebhookIntegrationRequestObject
-         * @example {
-         *       "method": "POST",
-         *       "payload": {
-         *         "event": "site.republished",
-         *         "timestamp": "2024-01-01T00:00:00Z"
-         *       },
-         *       "url": "https://api.example.com/webhooks"
-         *     }
+         * WorksheetNamesRead
+         * @description Response containing worksheet names for an API.
          */
-        WebhookIntegrationRequestObject: {
-            /** Url */
-            url: string;
+        WorksheetNamesRead: {
             /**
-             * Method
-             * @enum {string}
+             * Worksheets
+             * @description List of worksheet names from Google Sheets
              */
-            method: "GET" | "POST";
-            /**
-             * Payload
-             * @default {}
-             */
-            payload: {
-                [key: string]: unknown;
-            };
-            /** Name */
-            name?: string | null;
+            worksheets: Array<string>;
         };
     };
     responses: never;
@@ -925,6 +939,26 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    health_check_health_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
     login_login_get: {
         parameters: {
             query?: never;
@@ -947,7 +981,9 @@ export interface operations {
     };
     auth_auth_get: {
         parameters: {
-            query?: never;
+            query?: {
+                table_name?: string | null;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -961,6 +997,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -985,63 +1030,10 @@ export interface operations {
             };
         };
     };
-    get_token_google_picker_token_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-        };
-    };
-    save_token_google_picker_token_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["Body_save_token_google_picker_token_post"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_account_data_get_account_data_get: {
+    get_me_me_get: {
         parameters: {
             query?: {
-                account_id?: string | null;
+                table_name?: string | null;
             };
             header?: never;
             path?: never;
@@ -1055,7 +1047,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["UserDataResponse"];
+                    "application/json": components["schemas"]["AccountRead"];
                 };
             };
             /** @description Validation Error */
@@ -1069,10 +1061,11 @@ export interface operations {
             };
         };
     };
-    unsubscribe_unsubscribe_get: {
+    unsubscribe_email_unsubscribe_get: {
         parameters: {
             query: {
-                user_id: string;
+                account_id: string;
+                table_name?: string | null;
             };
             header?: never;
             path?: never;
@@ -1100,15 +1093,47 @@ export interface operations {
             };
         };
     };
-    read_sheet_v2_api__owner_id___sheet_api_name__get: {
+    get_manage__account_id___get: {
         parameters: {
             query?: {
-                worksheet?: string;
+                table_name?: string | null;
             };
             header?: never;
             path: {
-                owner_id: string;
-                sheet_api_name: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_account_endpoint_manage__account_id___delete: {
+        parameters: {
+            query?: {
+                table_name?: string | null;
+            };
+            header?: never;
+            path: {
+                account_id: string;
             };
             cookie?: never;
         };
@@ -1134,12 +1159,15 @@ export interface operations {
             };
         };
     };
-    get_sheets_metadata_v2_get_all_sheets__owner_id__get: {
+    get_worksheets_for_api_manage__account_id__apis__api_id__worksheets_get: {
         parameters: {
-            query?: never;
+            query?: {
+                table_name?: string | null;
+            };
             header?: never;
             path: {
-                owner_id: string;
+                account_id: string;
+                api_id: string;
             };
             cookie?: never;
         };
@@ -1151,7 +1179,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["GetAllSheetsResponse"];
+                    "application/json": components["schemas"]["WorksheetNamesRead"];
                 };
             };
             /** @description Validation Error */
@@ -1165,18 +1193,18 @@ export interface operations {
             };
         };
     };
-    create_api_v2_api_post: {
+    get_apis_for_account_manage__account_id__apis_get: {
         parameters: {
-            query?: never;
+            query?: {
+                table_name?: string | null;
+            };
             header?: never;
-            path?: never;
+            path: {
+                account_id: string;
+            };
             cookie?: never;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["Body_create_api_v2_api_post"];
-            };
-        };
+        requestBody?: never;
         responses: {
             /** @description Successful Response */
             200: {
@@ -1184,7 +1212,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Array<components["schemas"]["ApiRead"]>;
                 };
             };
             /** @description Validation Error */
@@ -1198,13 +1226,52 @@ export interface operations {
             };
         };
     };
-    delete_api_v2_delete_api__owner_id___sheet_api_name__delete: {
+    create_api_manage__account_id__apis_post: {
         parameters: {
-            query?: never;
+            query?: {
+                table_name?: string | null;
+            };
             header?: never;
             path: {
-                owner_id: string;
-                sheet_api_name: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApiCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiCreateRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_api_manage__account_id__apis__api_id__delete: {
+        parameters: {
+            query?: {
+                table_name?: string | null;
+            };
+            header?: never;
+            path: {
+                account_id: string;
+                api_id: string;
             };
             cookie?: never;
         };
@@ -1230,16 +1297,21 @@ export interface operations {
             };
         };
     };
-    update_cache_duration_v2_update_cache_duration_post: {
+    update_api_manage__account_id__apis__api_id__patch: {
         parameters: {
-            query?: never;
+            query?: {
+                table_name?: string | null;
+            };
             header?: never;
-            path?: never;
+            path: {
+                account_id: string;
+                api_id: string;
+            };
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateApiTtlRequest"];
+                "application/json": components["schemas"]["ApiUpdate"];
             };
         };
         responses: {
@@ -1249,7 +1321,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["UpdateApiTtlResponse"];
+                    "application/json": components["schemas"]["ApiRead"];
                 };
             };
             /** @description Validation Error */
@@ -1263,18 +1335,19 @@ export interface operations {
             };
         };
     };
-    create_organization_create_organization_post: {
+    refresh_spreadsheet_title_manage__account_id__apis__api_id__refresh_title_post: {
         parameters: {
-            query?: never;
+            query?: {
+                table_name?: string | null;
+            };
             header?: never;
-            path?: never;
+            path: {
+                account_id: string;
+                api_id: string;
+            };
             cookie?: never;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateOrganizationRequest"];
-            };
-        };
+        requestBody?: never;
         responses: {
             /** @description Successful Response */
             200: {
@@ -1282,7 +1355,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["OrganizationResponse"];
+                    "application/json": components["schemas"]["ApiRead"];
                 };
             };
             /** @description Validation Error */
@@ -1296,18 +1369,92 @@ export interface operations {
             };
         };
     };
-    invite_users_invite_users_to_organization_post: {
+    get_categories_for_post_manage__account_id__posts__post_key__categories_get: {
         parameters: {
-            query?: never;
+            query?: {
+                table_name?: string | null;
+            };
             header?: never;
-            path?: never;
+            path: {
+                account_id: string;
+                post_key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Array<components["schemas"]["CategoryRead"]>;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_category_to_post_manage__account_id__posts__post_key__categories_post: {
+        parameters: {
+            query?: {
+                table_name?: string | null;
+            };
+            header?: never;
+            path: {
+                account_id: string;
+                post_key: string;
+            };
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["Body_invite_users_invite_users_to_organization_post"];
+                "application/json": components["schemas"]["CategoryCreate"];
             };
         };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remove_category_from_post_manage__account_id__posts__post_key__categories__category__delete: {
+        parameters: {
+            query?: {
+                table_name?: string | null;
+            };
+            header?: never;
+            path: {
+                account_id: string;
+                post_key: string;
+                category: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description Successful Response */
             200: {
@@ -1329,11 +1476,330 @@ export interface operations {
             };
         };
     };
-    delete_organization_organization__org_id__delete: {
+    refresh_post_data_manage__account_id__posts__post_id__refresh_post: {
         parameters: {
-            query?: never;
+            query?: {
+                table_name?: string | null;
+            };
             header?: never;
             path: {
+                account_id: string;
+                post_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_posts_for_account_manage__account_id__posts_get: {
+        parameters: {
+            query?: {
+                table_name?: string | null;
+            };
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Array<components["schemas"]["PostRead"]>;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_post_manage__account_id__posts_post: {
+        parameters: {
+            query?: {
+                table_name?: string | null;
+                bucket_location?: string | null;
+                bucket_url?: string | null;
+            };
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PostCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostCreateRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_api_manage__account_id__posts__post_id__delete: {
+        parameters: {
+            query?: {
+                table_name?: string | null;
+            };
+            header?: never;
+            path: {
+                account_id: string;
+                post_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_memberships_for_organization_manage__account_id__organizations__org_id__memberships_get: {
+        parameters: {
+            query?: {
+                table_name?: string | null;
+            };
+            header?: never;
+            path: {
+                org_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Array<components["schemas"]["MembershipRead"]>;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_memberships_manage__account_id__organizations__org_id__memberships_post: {
+        parameters: {
+            query?: {
+                table_name?: string | null;
+            };
+            header?: never;
+            path: {
+                org_id: string;
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MembershipCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Array<components["schemas"]["MembershipRead"]>;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_organization_manage__account_id__organizations_get: {
+        parameters: {
+            query?: {
+                table_name?: string | null;
+            };
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Array<components["schemas"]["Organization"]>;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_organization_manage__account_id__organizations_post: {
+        parameters: {
+            query?: {
+                table_name?: string | null;
+            };
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OrganizationCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_organization_manage__account_id__organizations__org_id__get: {
+        parameters: {
+            query?: {
+                table_name?: string | null;
+            };
+            header?: never;
+            path: {
+                account_id: string;
+                org_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Organization"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_organization_manage__account_id__organizations__org_id__delete: {
+        parameters: {
+            query?: {
+                table_name?: string | null;
+            };
+            header?: never;
+            path: {
+                account_id: string;
                 org_id: string;
             };
             cookie?: never;
@@ -1360,15 +1826,16 @@ export interface operations {
             };
         };
     };
-    get_sheet_invocations_get_api_invocations_get: {
+    head_organization_manage__account_id__organizations__org_id__head: {
         parameters: {
-            query: {
+            query?: {
+                table_name?: string | null;
+            };
+            header?: never;
+            path: {
                 account_id: string;
-                sheet_api_name: string;
-                start_time: string;
+                org_id: string;
             };
-            header?: never;
-            path?: never;
             cookie?: never;
         };
         requestBody?: never;
@@ -1379,7 +1846,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ApiInvocationResponse"][];
+                    "application/json": unknown;
                 };
             };
             /** @description Validation Error */
@@ -1393,14 +1860,21 @@ export interface operations {
             };
         };
     };
-    get_sheet_invocations_total_get_api_invocations_total_get: {
+    get_resource_analytics_manage__account_id__analytics__resource_type___resource_id__get: {
         parameters: {
-            query: {
+            query?: {
+                /** @description ISO 8601 timestamp (e.g., 2025-01-01T00:00:00Z) */
+                start_time?: string | null;
+                /** @description ISO 8601 timestamp (e.g., 2025-01-31T23:59:59Z) */
+                end_time?: string | null;
+                table_name?: string | null;
+            };
+            header?: never;
+            path: {
                 account_id: string;
-                sheet_api_name: string;
+                resource_type: "api" | "post";
+                resource_id: string;
             };
-            header?: never;
-            path?: never;
             cookie?: never;
         };
         requestBody?: never;
@@ -1411,7 +1885,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Array<components["schemas"]["AnalyticsLogRead"]>;
                 };
             };
             /** @description Validation Error */
@@ -1425,84 +1899,16 @@ export interface operations {
             };
         };
     };
-    webhook_received_stripe_webhook_post: {
+    get_api_data__account_id__apis__api_id__get: {
         parameters: {
-            query?: never;
-            header?: {
-                "stripe-signature"?: string;
+            query?: {
+                worksheet?: string | null;
+                table_name?: string | null;
             };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_checkout_session_create_checkout_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-        };
-    };
-    homepage__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "text/html": string;
-                };
-            };
-        };
-    };
-    get_doc_doc__owner_id___api_name__get: {
-        parameters: {
-            query?: never;
             header?: never;
             path: {
-                owner_id: string;
-                api_name: string;
+                account_id: string;
+                api_id: string;
             };
             cookie?: never;
         };
@@ -1514,7 +1920,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["DocApiContentResponse"];
+                    "application/json": components["schemas"]["ApiSpreadsheetDataRead"];
                 };
             };
             /** @description Validation Error */
@@ -1528,13 +1934,49 @@ export interface operations {
             };
         };
     };
-    delete_doc_doc__owner_id___api_name__delete: {
+    get_post_data__account_id__posts__post_id__get: {
         parameters: {
-            query?: never;
+            query?: {
+                table_name?: string | null;
+            };
             header?: never;
             path: {
-                owner_id: string;
-                api_name: string;
+                account_id: string;
+                post_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostDocumentDataRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    head_post_data__account_id__posts__post_id__head: {
+        parameters: {
+            query?: {
+                table_name?: string | null;
+            };
+            header?: never;
+            path: {
+                account_id: string;
+                post_id: string;
             };
             cookie?: never;
         };
@@ -1560,79 +2002,49 @@ export interface operations {
             };
         };
     };
-    create_doc_doc_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["Body_create_doc_doc_post"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CreateDocResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_apis_metadata_docs_metadata__owner_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                owner_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["DocsMetadataResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_public_apis_docs__owner_id__get: {
+    get_public_posts_for_account__account_id__posts_get: {
         parameters: {
             query?: {
                 categories?: string | null;
+                table_name?: string | null;
             };
             header?: never;
             path: {
-                owner_id: string;
+                account_id: string;
             };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Array<components["schemas"]["PostRead"]>;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    stripe_webhook_billing_stripe_webhook_post: {
+        parameters: {
+            query?: {
+                table_name?: string | null;
+            };
+            header?: {
+                "Stripe-Signature"?: string;
+            };
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;
@@ -1657,18 +2069,16 @@ export interface operations {
             };
         };
     };
-    update_content_doc_publish_post: {
+    create_checkout_billing_create_checkout_post: {
         parameters: {
-            query?: never;
+            query?: {
+                table_name?: string | null;
+            };
             header?: never;
             path?: never;
             cookie?: never;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["PublishDocApiRequest"];
-            };
-        };
+        requestBody?: never;
         responses: {
             /** @description Successful Response */
             200: {
@@ -1676,7 +2086,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["CheckoutSession"];
                 };
             };
             /** @description Validation Error */
@@ -1690,49 +2100,11 @@ export interface operations {
             };
         };
     };
-    add_category_doc_add_category_post: {
+    root__get: {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AddCategoryToDocRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    add_category_doc_delete_category__owner_id___api_name__delete: {
-        parameters: {
-            query: {
-                category: string;
-            };
-            header?: never;
-            path: {
-                owner_id: string;
-                api_name: string;
-            };
             cookie?: never;
         };
         requestBody?: never;
@@ -1744,114 +2116,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    update_doc_slug_doc_update_slug_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateDocApiSlugRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    add_webhook_doc_add_webhook_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AddWebhookToDocApiRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    delete_webhook_doc_delete_webhook_delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["DeleteWebhookToDocApiRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

@@ -1,13 +1,14 @@
-import { ApisMetadata } from '@/schemas'
 import { rankItem } from '@tanstack/match-sorter-utils'
 import { Link } from '@tanstack/react-router'
 import {
-  useReactTable,
-  getCoreRowModel,
   flexRender,
-  FilterFn,
+  getCoreRowModel,
+  useReactTable
 } from '@tanstack/react-table'
 import { ApisListTableCell } from './ApisListTableCell'
+import type {
+  FilterFn} from '@tanstack/react-table';
+import type { ApisMetadata } from '@/schemas'
 
 export interface ApisListTableProps {
   accountId: string
@@ -36,7 +37,7 @@ export function ApisListTable({
   selectedPostId,
 }: ApisListTableProps) {
   const table = useReactTable({
-    data: posts.results,
+    data: posts,
     columns,
     getCoreRowModel: getCoreRowModel(),
     filterFns: { fuzzy },
@@ -50,7 +51,7 @@ export function ApisListTable({
               <tr
                 key={row.id}
                 className={
-                  row.original.sheet_api_name === selectedPostId
+                  row.original.api_key === selectedPostId
                     ? 'border-l-2 border-l-primary bg-gray-50'
                     : 'border-l-1 border-l-transparent'
                 }
@@ -61,7 +62,7 @@ export function ApisListTable({
                       to="/$accountId/apis/$apiId"
                       params={{
                         accountId,
-                        apiId: cell.row.original.sheet_api_name,
+                        apiId: cell.row.original.api_key,
                       }}
                       className="block w-full"
                     >

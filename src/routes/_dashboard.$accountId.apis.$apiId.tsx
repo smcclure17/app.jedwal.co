@@ -1,11 +1,11 @@
 // src/routes/_dashboard.$accountId.posts.$postId.tsx
 import { useQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
-import { fetchApis } from '@/data/fetchers'
+import { fetchApis } from '@/data/fetchers/apis'
 import config from '@/config'
 import { Separator } from '@/components/ui/separator'
 import { DashboardSection } from '@/components/DashboardSection'
-import { PostAnalyticsChart } from '@/components/posts/PostAnalyticsChart'
+import { AnalyticsChart } from '@/components/posts/PostAnalyticsChart'
 import { PostLayoutSkeleton } from '@/components/posts/PostLayoutSkeleton'
 import { DeleteApiButton } from '@/components/apis/DeleteApiButton'
 import { ApiCopyableSnippet } from '@/components/apis/ApiCopyableSnippet'
@@ -23,25 +23,29 @@ function PostLayout() {
   const { data: posts, isLoading } = useQuery({
     queryKey: ['apis', accountId],
     queryFn: () => fetchApis(accountId),
-    initialData: { results: [], failures: [] },
+    initialData: [],
   })
 
-  const post = posts?.results.find((p) => p.sheet_api_name === apiId)
-  
+  const post = posts.find((p) => p.api_key === apiId)
+
   if (isLoading || !post) {
     return <PostLayoutSkeleton />
   }
 
   const postSourceUrl = `https://docs.google.com/spreadsheets/d/${post.google_sheet_id}`
-  const postJedwalUrl = `${config.api.url}/api/${accountId}/${post.sheet_api_name}`
+  const postJedwalUrl = `${config.api.url}/${accountId}/api/${post.api_key}`
 
   return (
     <div className="flex flex-col space-y-6 w-full">
       <div className="flex flex-col space-y-2">
         <div className="flex flex-col space-y-1">
-          <h2 className="text-h2">{post.spreadsheet_title}</h2>
+          <div className="flex space-x-2">
+            <h2 className="text-h2">
+              {post.spreadsheet_title ?? 'Unknown Title'}
+            </h2>
+          </div>
           <h3 className="text-lg font-accent text-muted-foreground">
-            /api/{post.sheet_api_name}
+            /api/{post.api_key}
           </h3>
         </div>
         <a
@@ -57,16 +61,24 @@ function PostLayout() {
         <CacheInput
           defaultTtl={post.cache_duration}
           accountId={accountId}
-          name={post.sheet_api_name}
+          name={post.api_key}
         />
       </DashboardSection>
       <DashboardSection title="Content Link">
-        <ApiCopyableSnippet base={postJedwalUrl} worksheets={post.worksheets} />
+        <ApiCopyableSnippet
+          base={postJedwalUrl}
+          accountId={accountId}
+          postId={apiId}
+        />
       </DashboardSection>
       <DashboardSection title="Analytics">
-        <PostAnalyticsChart accountId={accountId} postId={apiId} />
+        <AnalyticsChart
+          accountId={accountId}
+          resourceType={'api'}
+          postId={apiId}
+        />
       </DashboardSection>
-      <DeleteApiButton postId={post.sheet_api_name} accountId={accountId} />
+      <DeleteApiButton postId={post.api_key} accountId={accountId} />
     </div>
   )
 }

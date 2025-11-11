@@ -1,10 +1,10 @@
-import { PostMetadata } from '@/schemas'
-import { PostsListTable } from './PostsListTable'
 import { PremiumApiCard } from '../UpgradeAccountCard'
+import { PostsListTable } from './PostsListTable'
+import type { Post } from '@/schemas'
 
 export interface PostsListProps {
   accountId: string
-  posts: PostMetadata[] | null
+  posts: Array<Post> | null
   selectedPostId?: string
   showPremiumCard?: boolean
 }

@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import { WebhookIntegration } from '@/schemas'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
+import type { WebhookIntegration } from '@/schemas'
 import { createWebhook, deleteWebhook } from '@/data/fetchers'
 
 export interface WebhookListProps {
-  webhooks: WebhookIntegration[]
+  webhooks: Array<WebhookIntegration>
   accountId: string
   apiName: string
 }

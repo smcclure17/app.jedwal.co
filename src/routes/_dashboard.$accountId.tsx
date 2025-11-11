@@ -1,13 +1,13 @@
 // src/routes/_dashboard.$accountId.tsx
+import { Outlet, createFileRoute } from '@tanstack/react-router'
 import { BreadcrumbMagic } from '@/components/BreadcrumbMagic'
 import { NotFoundScreen } from '@/components/NotFoundScreen'
 import { Sidebar } from '@/components/Sidebar'
 import { Spinner } from '@/components/Spinner'
 import { AuthProvider } from '@/contexts/AuthContext'
-import { useUserData } from '@/hooks/use-user'
+import { useAccountContext } from '@/hooks/use-user'
 import { usePosts } from '@/hooks/use-posts'
 import { useApis } from '@/hooks/use-apis'
-import { createFileRoute, Outlet } from '@tanstack/react-router'
 
 // src/routes/_dashboard.$accountId.tsx
 export const Route = createFileRoute('/_dashboard/$accountId')({
@@ -16,8 +16,7 @@ export const Route = createFileRoute('/_dashboard/$accountId')({
 
 function AccountLayout() {
   const { accountId } = Route.useParams()
-
-  const { data: user, isLoading } = useUserData()
+  const { data: context, isLoading } = useAccountContext(accountId)
 
   // Prefetch posts and APIs data in the background
   // These will be cached and ready when navigating to /posts or /apis
@@ -32,21 +31,14 @@ function AccountLayout() {
     )
   }
 
-  if (!user) {
-    return <NotFoundScreen />
-  }
-
-  const userOrgIds = user.orgs?.map((org: any) => org.account_id) ?? []
-  const isAuthorized = user.id === accountId || userOrgIds.includes(accountId)
-
-  if (!isAuthorized) {
+  if (context === "not ok") {
     return <NotFoundScreen />
   }
 
   return (
     <AuthProvider accountId={accountId}>
       <div className="flex h-screen">
-        <Sidebar/>
+        <Sidebar />
         <main className="flex-1 overflow-auto p-6">
           <BreadcrumbMagic />
           <Outlet />

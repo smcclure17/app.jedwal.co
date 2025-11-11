@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import { PostDocCreatePreview } from './PostDocCreatePreview'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -10,10 +12,8 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { PostDocCreatePreview } from './PostDocCreatePreview'
 import { Spinner } from '@/components/Spinner'
 import { useCheckNameAvailable } from '@/hooks/use-check-name-available'
-import { useState } from 'react'
 
 interface CreatePostModalPostsProps {
   title: string

@@ -1,4 +1,5 @@
-import { FileText, ArrowRight, Database } from 'lucide-react'
+import { ArrowRight, Database, FileText } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
 import { Button } from '../ui/button'
 import {
   Card,
@@ -7,13 +8,12 @@ import {
   CardHeader,
   CardTitle,
 } from '../ui/card'
-import { Link } from '@tanstack/react-router'
-import { ApisMetadata, PostMetadata, UserDataResponse } from '@/schemas'
+import type { AccountRead, Api, Post } from '@/schemas'
 
 interface LandingScreenContentProps {
-  user: UserDataResponse
-  posts: PostMetadata[]
-  apis: ApisMetadata
+  user: AccountRead
+  posts: Array<Post>
+  apis: Array<Api>
 }
 
 export function LandingScreenContent({
@@ -22,10 +22,10 @@ export function LandingScreenContent({
   apis,
 }: LandingScreenContentProps) {
   const postsCount = posts.length
-  const apisCount = apis?.results.length + apis?.failures?.length
+  const apisCount = apis.length
   return (
     <div className="grid gap-6 md:grid-cols-2">
-      <Card className='border rounded-sm'>
+      <Card className="border rounded-sm">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -46,7 +46,7 @@ export function LandingScreenContent({
         </CardContent>
       </Card>
 
-      <Card className='border rounded-sm'>
+      <Card className="border rounded-sm">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">

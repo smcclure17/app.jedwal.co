@@ -1,10 +1,11 @@
 import { useState } from 'react'
+import { useNavigate } from '@tanstack/react-router'
 import { Input } from '../ui/input'
+import { CreatePostModal } from './CreatePostModal'
+import type { PostCreateResponse } from '@/schemas'
 import { GooglePicker } from '@/components/GooglePicker'
 import { useCreatePost } from '@/hooks/use-posts'
-import { useNavigate } from '@tanstack/react-router'
 import { extractGoogleResourceId } from '@/lib/utils'
-import { CreatePostModal } from './CreatePostModal'
 
 export interface CreateApiFormProps {
   accountId: string
@@ -28,12 +29,12 @@ export const CreatePostForm = ({
 
   const mutation = useCreatePost(accountId)
 
-  const handleSuccess = (data: { post_id: string }) => {
+  const handleSuccess = ({ post_key }: PostCreateResponse) => {
     setSheetUrl('')
     setSelectedDoc(null)
     navigate({
       to: '/$accountId/posts/$postId',
-      params: { accountId, postId: data.post_id },
+      params: { accountId, postId: post_key },
     })
   }
 
@@ -57,7 +58,9 @@ export const CreatePostForm = ({
         {showLabel && (
           <label htmlFor="create">
             <p className="text-h2">Create a New Post</p>
-            <p className='text-xs text-gray-700'>Paste a Google Doc URL to get started</p>
+            <p className="text-xs text-gray-700">
+              Paste a Google Doc URL to get started
+            </p>
           </label>
         )}
         <div className="flex flex-row space-x-2">

@@ -1,16 +1,26 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
-  fetchApis,
   createApi,
   deleteApi,
-  getApiAnalytics,
-  postTtlUpdate
-} from '@/data/fetchers'
+  fetchApis,
+  fetchWorksheetNames,
+  postTtlUpdate,
+} from '@/data/fetchers/apis'
+
+import { getAnalytics } from '@/data/fetchers'
 
 export function useApis(accountId: string) {
   return useQuery({
     queryKey: ['apis', accountId],
     queryFn: () => fetchApis(accountId),
+    initialData: null,
+  })
+}
+
+export function useWorksheetNames(accountId: string, postId: string) {
+  return useQuery({
+    queryKey: ['worksheets', accountId, postId],
+    queryFn: () => fetchWorksheetNames(accountId, postId),
     initialData: null,
   })
 }
@@ -37,10 +47,14 @@ export function useDeleteApi(accountId: string) {
   })
 }
 
-export function useApiAnalytics(accountId: string, apiName: string) {
+export function useAnalytics(
+  accountId: string,
+  resourceType: string,
+  apiName: string,
+) {
   return useQuery({
-    queryKey: ['apiAnalytics', accountId, apiName],
-    queryFn: () => getApiAnalytics(accountId, apiName),
+    queryKey: ['analytics', resourceType, accountId, apiName],
+    queryFn: () => getAnalytics(accountId, resourceType, apiName),
   })
 }
 

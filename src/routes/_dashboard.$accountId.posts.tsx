@@ -1,10 +1,10 @@
 // src/routes/_dashboard.$accountId.posts.tsx
+import { Outlet, createFileRoute, useParams } from '@tanstack/react-router'
 import { CreatePostForm } from '@/components/posts/CreatePostForm'
 import { FirstDocSplash } from '@/components/FirstDocSplash'
 import { PostsList } from '@/components/posts/PostsList'
 import { PostsLayoutSkeleton } from '@/components/posts/PostsLayoutSkeleton'
 import { usePosts } from '@/hooks/use-posts'
-import { createFileRoute, Outlet, useParams } from '@tanstack/react-router'
 import { useUserData } from '@/hooks/use-user'
 
 export const Route = createFileRoute('/_dashboard/$accountId/posts')({

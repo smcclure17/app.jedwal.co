@@ -37,7 +37,7 @@ function App() {
   }
 
   if (mutation.isError) {
-    const error = mutation.error as Error
+    const error = mutation.error
 
     if (error.message === 'User Not Logged In') {
       return (

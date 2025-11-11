@@ -1,10 +1,11 @@
 import { useState } from 'react'
+import { useNavigate } from '@tanstack/react-router'
 import { Input } from '../ui/input'
+import { CreateApiModal } from './CreateApiModal'
+import type { ApiCreateResponse } from '@/schemas'
 import { GooglePicker } from '@/components/GooglePicker'
 import { useCreateApi } from '@/hooks/use-apis'
-import { useNavigate } from '@tanstack/react-router'
 import { extractGoogleResourceId } from '@/lib/utils'
-import { CreateApiModal } from './CreateApiModal'
 
 export interface CreateApiFormProps {
   accountId: string
@@ -28,12 +29,12 @@ export const CreateApiForm = ({
 
   const mutation = useCreateApi(accountId)
 
-  const handleSuccess = (data: { api_name: string }) => {
+  const handleSuccess = ({ api_key }: ApiCreateResponse) => {
     setSheetUrl('')
     setSelectedDoc(null)
     navigate({
       to: '/$accountId/apis/$apiId',
-      params: { accountId, apiId: data.api_name },
+      params: { accountId, apiId: api_key },
     })
   }
 
@@ -52,7 +53,9 @@ export const CreateApiForm = ({
         {showLabel && (
           <label htmlFor="create">
             <p className="text-h2">Create a New API</p>
-            <p className='text-xs text-gray-700'>Paste a Google Sheet URL to get started</p>
+            <p className="text-xs text-gray-700">
+              Paste a Google Sheet URL to get started
+            </p>
           </label>
         )}
         <div className="flex flex-row space-x-2">
@@ -76,7 +79,7 @@ export const CreateApiForm = ({
             fileId={sheetId}
             disabled={disabled || mutation.isPending}
             onPick={setSelectedDoc}
-            submitTitle='Create New API'
+            submitTitle="Create New API"
           />
         </div>
       </form>

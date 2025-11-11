@@ -1,14 +1,14 @@
+import { Link, useParams, useRouterState } from '@tanstack/react-router'
 import {
   Breadcrumb,
-  BreadcrumbList,
   BreadcrumbItem,
   BreadcrumbLink,
-  BreadcrumbSeparator,
+  BreadcrumbList,
   BreadcrumbPage,
+  BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useAuth } from '@/contexts/AuthContext'
-import { useParams, useRouterState, Link } from '@tanstack/react-router'
 
 /**
  * Dynamically builds breadcrumbs based on user + route.
@@ -23,7 +23,7 @@ export function BreadcrumbMagic() {
   const { user } = useAuth()
 
   const pathname = location.pathname
-  const crumbs: { label: React.ReactNode; href?: string }[] = []
+  const crumbs: Array<{ label: React.ReactNode; href?: string }> = []
 
   if (user) {
     crumbs.push({

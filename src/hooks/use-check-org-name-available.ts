@@ -1,20 +1,27 @@
 import { useQuery } from '@tanstack/react-query'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import config from '@/config'
 
-async function checkOrgNameAvailable(name: string): Promise<boolean> {
-  const url = `${config.api.url}/organization/check-name-available?organization_name=${name}`
-  const response = await fetch(url, { credentials: 'include' })
+async function checkOrgNameAvailable(
+  accountId: string,
+  name: string,
+): Promise<boolean> {
+  const url = `${config.api.url}/manage/${accountId}/organizations/${name}`
+  const response = await fetch(url, { credentials: 'include', method: 'HEAD' })
 
-  if (!response.ok) {
-    throw new Error(`Failed to check org name availability: ${response.statusText}`)
+  if (response.status === 404) {
+    return true
+  } else if (response.ok) {
+    return false
   }
-
-  const data = await response.json()
-  return data.available
+  throw new Error('Could not check org name status')
 }
 
-export function useCheckOrgNameAvailable(name: string, debounceMs: number = 500) {
+export function useCheckOrgNameAvailable(
+  accountId: string,
+  name: string,
+  debounceMs: number = 500,
+) {
   const [debouncedName, setDebouncedName] = useState(name)
 
   useEffect(() => {
@@ -29,7 +36,7 @@ export function useCheckOrgNameAvailable(name: string, debounceMs: number = 500)
 
   return useQuery({
     queryKey: ['check-org-name-available', debouncedName],
-    queryFn: () => checkOrgNameAvailable(debouncedName),
+    queryFn: () => checkOrgNameAvailable(accountId, debouncedName),
     enabled: debouncedName.length > 0,
     retry: false,
     staleTime: 30000, // Consider data fresh for 30 seconds

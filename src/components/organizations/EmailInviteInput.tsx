@@ -4,8 +4,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
 interface EmailInviteInputProps {
-  onAddEmails: (emails: string[]) => void
-  existingEmails: string[]
+  onAddEmails: (emails: Array<string>) => void
+  existingEmails: Array<string>
 }
 
 export function EmailInviteInput({

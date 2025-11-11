@@ -1,12 +1,12 @@
 import { Link, useParams } from '@tanstack/react-router'
+import { Loader2, Trash2 } from 'lucide-react'
+import { useState } from 'react'
 import { Card, CardDescription, CardHeader, CardTitle } from '../ui/card'
 import { Button } from '../ui/button'
-import { Loader2, Trash2 } from 'lucide-react'
 import { useDeleteOrganization } from '@/hooks/use-organizations'
-import { useState } from 'react'
 
 export function OrganizationPreviewCard({ org }: { org: any }) {
-  const {accountId} = useParams({strict: false});
+  const { accountId } = useParams({ strict: false })
   const [deletingOrgId, setDeletingOrgId] = useState<string | null>(null)
   const deleteMutation = useDeleteOrganization()
 

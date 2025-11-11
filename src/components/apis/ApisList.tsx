@@ -1,10 +1,9 @@
-import { ApisMetadata } from '@/schemas'
-import { ApisListTable } from './ApisListTable'
 import { PremiumApiCard } from '../UpgradeAccountCard'
+import { ApisListTable } from './ApisListTable'
 
 export interface PostsListProps {
   accountId: string
-  posts: ApisMetadata
+  posts: any
   selectedPostId?: string
   showPremiumCard?: boolean
 }
@@ -31,7 +30,7 @@ function ApisListSkeleton() {
 }
 
 export function ApisList({ accountId, posts, selectedPostId, showPremiumCard = false }: PostsListProps) {
-  if (posts.results.length === 0 || !posts.results) {
+  if (posts.length === 0) {
     return (
       <div className="w-72 border-b">
         <h3 className="text-h2 pb-2">Your APIs</h3>

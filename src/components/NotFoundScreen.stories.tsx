@@ -1,13 +1,14 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import {
+  RouterProvider,
   createMemoryHistory,
   createRootRoute,
   createRouter,
-  RouteComponent,
-  RouterProvider,
 } from '@tanstack/react-router'
 import { NotFoundScreen } from './NotFoundScreen'
+import type {
+  RouteComponent} from '@tanstack/react-router';
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 // Create a QueryClient for Storybook
 const queryClient = new QueryClient({

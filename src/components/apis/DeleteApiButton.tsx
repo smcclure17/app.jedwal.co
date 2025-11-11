@@ -1,5 +1,5 @@
-import { useDeleteApi } from '@/hooks/use-apis'
 import { useNavigate } from '@tanstack/react-router'
+import { useDeleteApi } from '@/hooks/use-apis'
 
 export interface DeleteDocApiButtonProps {
   accountId: string

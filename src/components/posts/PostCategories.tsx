@@ -1,15 +1,15 @@
-import { useAddPostCategory, useRemovePostCategory } from '@/hooks/use-posts'
 import { useEffect, useState } from 'react'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { Badge } from '../ui/badge'
 import { Spinner } from '../Spinner'
 import { Checkmark } from '../Checkmark'
+import { useAddPostCategory, useRemovePostCategory } from '@/hooks/use-posts'
 
 export interface PostCategoriesProps {
   accountId: string
   postId: string
-  categories: any[]
+  categories: Array<any>
 }
 
 export default function PostCategories({
