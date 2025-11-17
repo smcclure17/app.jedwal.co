@@ -4,6 +4,7 @@ import {
   createPost,
   deletePost,
   fetchPosts,
+  getWebhooks,
   removePostCategory,
   republishPost,
 } from '@/data/fetchers'
@@ -113,5 +114,13 @@ export function useRemovePostCategory(accountId: string, postId: string) {
       // Always refetch to ensure sync with server
       queryClient.invalidateQueries({ queryKey: ['posts', accountId] })
     },
+  })
+}
+
+export function useWebhooks(accountId: string, postId: string) {
+  return useQuery({
+    queryKey: ['webhooks', accountId, postId],
+    queryFn: () => getWebhooks(accountId, postId),
+    initialData: null,
   })
 }

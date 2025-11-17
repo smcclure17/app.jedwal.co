@@ -1,44 +1,70 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
-import type { WebhookIntegration } from '@/schemas'
 import { createWebhook, deleteWebhook } from '@/data/fetchers'
+import { useWebhooks } from '@/hooks/use-posts'
 
 export interface WebhookListProps {
-  webhooks: Array<WebhookIntegration>
   accountId: string
   apiName: string
 }
 
-export function WebhookIntegrations({
-  webhooks,
-  accountId,
-  apiName,
-}: WebhookListProps) {
+export function WebhookIntegrations({ accountId, apiName }: WebhookListProps) {
+  const { data: webhooks, isLoading } = useWebhooks(accountId, apiName)
+
   const [method, setMethod] = useState<'GET' | 'POST'>('GET')
   const [url, setUrl] = useState('')
   const [name, setName] = useState('')
-  const [payload, setPayload] = useState('')
-  const [allWebhooks, setAllWebhooks] = useState(webhooks)
+  const [payload, setPayload] = useState('{}')
+
+  const [allWebhooks, setAllWebhooks] = useState<any[]>([])
+
+  // Sync with fetched webhooks
+  useEffect(() => {
+    if (webhooks?.webhooks) {
+      setAllWebhooks(webhooks.webhooks)
+    }
+  }, [webhooks])
+
+  if (isLoading || !webhooks) return <>loading...</>
 
   const handleCreate = async () => {
     if (!url) return alert('Please enter a URL')
+
     try {
-      await createWebhook(accountId, apiName, url, method)
+      await createWebhook(accountId, apiName, url, name, method, payload)
+
       setUrl('')
-      setPayload('')
+      setPayload('{}')
       setName('')
-      setAllWebhooks([...allWebhooks, { url, method, payload, name }])
+
+      setAllWebhooks((prev) => [
+        ...prev,
+        {
+          url,
+          name: name || url, // fallback if name is empty
+          method,
+          payload: method === 'POST' ? JSON.parse(payload || '{}') : undefined,
+        },
+      ])
     } catch (e: any) {
       alert(e.message)
     }
   }
 
-  const handleDelete = async (targetUrl: string) => {
-    if (!confirm(`Delete webhook ${targetUrl}?`)) return
+  const handleDelete = async (webhook: any) => {
+    if (!confirm(`Delete webhook ${webhook.url}?`)) return
+
     try {
-      await deleteWebhook(accountId, apiName, targetUrl)
-      setAllWebhooks(allWebhooks.filter((w) => w.url !== targetUrl))
+      await deleteWebhook(
+        accountId,
+        apiName,
+        webhook.url,
+        webhook.name,
+        webhook.method,
+      )
+
+      setAllWebhooks((prev) => prev.filter((w) => w.url !== webhook.url))
     } catch (e: any) {
       alert(e.message)
     }
@@ -48,13 +74,14 @@ export function WebhookIntegrations({
     <div className="flex flex-col space-y-4 max-w-md">
       <div className="flex flex-col space-y-2 text-sm">
         <span>Add a webhook</span>
+
         <Input
           type="text"
           placeholder="Webhook Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full"
         />
+
         <div className="flex flex-row space-x-2">
           <select
             value={method}
@@ -64,45 +91,46 @@ export function WebhookIntegrations({
             <option value="GET">GET</option>
             <option value="POST">POST</option>
           </select>
+
           <Input
             type="text"
             placeholder="Webhook URL"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            className="w-full"
           />
         </div>
+
         <textarea
           placeholder="Payload (optional)"
-          value={JSON.stringify(payload)}
+          value={payload}
           disabled={method !== 'POST'}
           onChange={(e) => setPayload(e.target.value)}
           className="border p-1 rounded text-sm disabled:bg-gray-50"
         />
-        <Button
-          variant={'outline'}
-          onClick={handleCreate}
-          className="px-3 py-1"
-        >
+
+        <Button variant="outline" onClick={handleCreate}>
           Add Webhook
         </Button>
       </div>
 
-      {/* Existing webhooks */}
       <div className="flex flex-col space-y-2 text-sm">
         {allWebhooks.length > 0 && <span>Existing integrations</span>}
-        {allWebhooks.map((webhook, i: number) => (
+
+        {allWebhooks.map((webhook, i) => (
           <div
             key={i}
             className="flex flex-row justify-between items-center border px-2 py-1 rounded"
           >
             <div className="flex flex-col">
               <span className="font-mono text-sm">{webhook.method}</span>
-              <span className="text-sm">{webhook.name ?? (webhook.url.slice(0, 32) + "...")}</span>
+              <span className="text-sm">
+                {webhook.name || webhook.url.slice(0, 32) + '...'}
+              </span>
             </div>
+
             <Button
-              variant={'link'}
-              onClick={() => handleDelete(webhook.url)}
+              variant="link"
+              onClick={() => handleDelete(webhook)}
               className="text-red-500 cursor-pointer"
             >
               Remove

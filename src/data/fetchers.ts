@@ -3,6 +3,7 @@ import type {
   ApiInvocationResponse,
   Post,
   PostCreateResponse,
+  Webhooks,
 } from '@/schemas'
 import config from '@/config'
 
@@ -113,45 +114,73 @@ export async function removePostCategory(
 }
 
 export async function createWebhook(
-  ownerId: string,
-  apiName: string,
+  accountId: string,
+  postId: string,
   url: string,
-  method: string,
+  name: string,
+  method: 'POST' | 'GET',
+  payload: string,
 ) {
-  const res = await fetch(`${config.api.url}/doc/add-webhook`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
-    body: JSON.stringify({
-      owner_id: ownerId,
-      api_name: apiName,
-      webhook: { url, method, payload: {} },
-    }),
-  })
+  const res = await fetch(
+    `${config.api.url}/manage/${accountId}/posts/${postId}/webhooks`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        url,
+        name,
+        method,
+        payload: payload,
+      }),
+    },
+  )
 
   if (!res.ok) {
     throw new Error(`Failed to create webhook: ${res.statusText}`)
   }
 }
 
-export async function deleteWebhook(
-  ownerId: string,
-  apiName: string,
-  url: string,
-) {
-  const res = await fetch(`${config.api.url}/doc/delete-webhook`, {
-    method: 'DELETE',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
-    body: JSON.stringify({
-      owner_id: ownerId,
-      api_name: apiName,
-      url,
-    }),
-  })
+export async function getWebhooks(accountId: string, postId: string) {
+  const res = await fetch(
+    `${config.api.url}/manage/${accountId}/posts/${postId}/webhooks`,
+    { credentials: 'include' },
+  )
 
   if (!res.ok) {
-    throw new Error(`Failed to delete webhook: ${res.statusText}`)
+    throw new Error(`Failed to create webhook: ${res.statusText}`)
+  }
+  return res.json() as Promise<Webhooks>
+}
+
+export async function deleteWebhook(
+  accountId: string,
+  postId: string,
+  url: string,
+  name: string,
+  method: 'POST' | 'GET',
+) {
+  const query = new URLSearchParams({
+    account_id: accountId,
+    post_key: postId,
+  })
+
+  const res = await fetch(
+    `${config.api.url}/manage/${accountId}/posts/${postId}/webhooks?${query.toString()}`,
+    {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        url,
+        name,
+        method,
+      }),
+    },
+  )
+
+  if (!res.ok) {
+    throw new Error(`Failed to create webhook: ${res.statusText}`)
   }
 }
 
@@ -179,7 +208,7 @@ export async function getAnalytics(
 
 export async function fetchUserData(accountId?: string) {
   const meUrl = `${config.api.url}/me`
-  const accountUrl = `${config.api.url}/manage/${accountId}`
+  const accountUrl = `${config.api.url}/manage/${accountId}/`
   const url = accountId ? accountUrl : meUrl
 
   const res = await fetch(url, {
@@ -201,12 +230,15 @@ export async function createOrganization(
   name: string,
   invitees: Array<string>,
 ) {
-  const res = await fetch(`${config.api.url}/manage/${accountId}/organizations`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-    body: JSON.stringify({ organization_name: name, memberships: invitees }),
-    credentials: 'include',
-  })
+  const res = await fetch(
+    `${config.api.url}/manage/${accountId}/organizations`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      body: JSON.stringify({ organization_name: name, memberships: invitees }),
+      credentials: 'include',
+    },
+  )
 
   if (!res.ok) {
     throw new Error(`Failed to create org. Error status: ${res.status}`)
@@ -260,7 +292,7 @@ export async function getOrganizationMembers(accountId: string, orgId: string) {
 }
 
 export async function fetchAccountContext(accountId: string) {
-  const url = `${config.api.url}/manage/${accountId}`
+  const url = `${config.api.url}/manage/${accountId}/`
   const res = await fetch(url, { credentials: 'include' })
 
   if (res.status === 403) {

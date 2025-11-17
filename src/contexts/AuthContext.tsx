@@ -25,7 +25,7 @@ export function AuthProvider({
 
   useEffect(() => {
     const meUrl = `${config.api.url}/me`
-    const accountUrl = `${config.api.url}/manage/${accountId}`
+    const accountUrl = `${config.api.url}/manage/${accountId}/`
     const url = accountId ? accountUrl : meUrl
 
     fetch(url, {

@@ -280,6 +280,25 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/manage/{account_id}/posts/{post_key}/webhooks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Webhooks */
+        get: operations["get_webhooks_manage__account_id__posts__post_key__webhooks_get"];
+        put?: never;
+        /** Create Webhook */
+        post: operations["create_webhook_manage__account_id__posts__post_key__webhooks_post"];
+        /** Create Webhook */
+        delete: operations["create_webhook_manage__account_id__posts__post_key__webhooks_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/manage/{account_id}/posts/{post_id}/refresh": {
         parameters: {
             query?: never;
@@ -373,10 +392,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Organization
+         * Get Organizations
          * @description Get all memberships for an org/account.
          */
-        get: operations["get_organization_manage__account_id__organizations_get"];
+        get: operations["get_organizations_manage__account_id__organizations_get"];
         put?: never;
         /** Create Organization */
         post: operations["create_organization_manage__account_id__organizations_post"];
@@ -691,9 +710,9 @@ export interface components {
             /** Sheet Id */
             sheet_id: string;
             /** Data */
-            data: Array<{
+            data: {
                 [key: string]: unknown;
-            }>;
+            }[];
             /**
              * Expires At
              * Format: date-time
@@ -741,7 +760,7 @@ export interface components {
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
-            detail?: Array<components["schemas"]["ValidationError"]>;
+            detail?: components["schemas"]["ValidationError"][];
         };
         /** MembershipCreate */
         MembershipCreate: {
@@ -761,7 +780,7 @@ export interface components {
         /** MembershipCreateRequest */
         MembershipCreateRequest: {
             /** Memberships */
-            memberships: Array<components["schemas"]["MembershipCreate"]>;
+            memberships: components["schemas"]["MembershipCreate"][];
         };
         /**
          * MembershipRead
@@ -839,7 +858,7 @@ export interface components {
              * Memberships
              * @description Account emails to invite
              */
-            memberships: Array<string>;
+            memberships: string[];
         };
         /** PostCreateRead */
         PostCreateRead: {
@@ -908,16 +927,68 @@ export interface components {
              * Categories
              * @description Post categories
              */
-            categories?: Array<string> | null;
+            categories?: string[] | null;
         };
         /** ValidationError */
         ValidationError: {
             /** Location */
-            loc: Array<string | number>;
+            loc: (string | number)[];
             /** Message */
             msg: string;
             /** Error Type */
             type: string;
+        };
+        /** WebhookIntegration */
+        "WebhookIntegration-Input": {
+            /**
+             * Url
+             * Format: uri
+             */
+            url: string;
+            /**
+             * Method
+             * @enum {string}
+             */
+            method: "GET" | "POST";
+            /** Payload */
+            payload?: string | null;
+            /** Name */
+            name?: string | null;
+        };
+        /** WebhookIntegration */
+        "WebhookIntegration-Output": {
+            /**
+             * Url
+             * Format: uri
+             */
+            url: string;
+            /**
+             * Method
+             * @enum {string}
+             */
+            method: "GET" | "POST";
+            /** Payload */
+            payload?: unknown | null;
+            /** Name */
+            name?: string | null;
+        };
+        /** WebhooksRead */
+        WebhooksRead: {
+            /**
+             * Account Id
+             * @description The account owner of the post
+             */
+            account_id: string;
+            /**
+             * Post Id
+             * @description The post ID
+             */
+            post_id: string;
+            /**
+             * Webhooks
+             * @description The webhook configs for this post
+             */
+            webhooks: components["schemas"]["WebhookIntegration-Output"][];
         };
         /**
          * WorksheetNamesRead
@@ -928,7 +999,7 @@ export interface components {
              * Worksheets
              * @description List of worksheet names from Google Sheets
              */
-            worksheets: Array<string>;
+            worksheets: string[];
         };
     };
     responses: never;
@@ -1212,7 +1283,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": Array<components["schemas"]["ApiRead"]>;
+                    "application/json": components["schemas"]["ApiRead"][];
                 };
             };
             /** @description Validation Error */
@@ -1389,7 +1460,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": Array<components["schemas"]["CategoryRead"]>;
+                    "application/json": components["schemas"]["CategoryRead"][];
                 };
             };
             /** @description Validation Error */
@@ -1476,6 +1547,116 @@ export interface operations {
             };
         };
     };
+    get_webhooks_manage__account_id__posts__post_key__webhooks_get: {
+        parameters: {
+            query?: {
+                table_name?: string | null;
+            };
+            header?: never;
+            path: {
+                account_id: string;
+                post_key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhooksRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_webhook_manage__account_id__posts__post_key__webhooks_post: {
+        parameters: {
+            query?: {
+                table_name?: string | null;
+            };
+            header?: never;
+            path: {
+                account_id: string;
+                post_key: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WebhookIntegration-Input"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_webhook_manage__account_id__posts__post_key__webhooks_delete: {
+        parameters: {
+            query?: {
+                table_name?: string | null;
+            };
+            header?: never;
+            path: {
+                account_id: string;
+                post_key: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WebhookIntegration-Input"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     refresh_post_data_manage__account_id__posts__post_id__refresh_post: {
         parameters: {
             query?: {
@@ -1529,7 +1710,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": Array<components["schemas"]["PostRead"]>;
+                    "application/json": components["schemas"]["PostRead"][];
                 };
             };
             /** @description Validation Error */
@@ -1636,7 +1817,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": Array<components["schemas"]["MembershipRead"]>;
+                    "application/json": components["schemas"]["MembershipRead"][];
                 };
             };
             /** @description Validation Error */
@@ -1674,7 +1855,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": Array<components["schemas"]["MembershipRead"]>;
+                    "application/json": components["schemas"]["MembershipRead"][];
                 };
             };
             /** @description Validation Error */
@@ -1688,7 +1869,7 @@ export interface operations {
             };
         };
     };
-    get_organization_manage__account_id__organizations_get: {
+    get_organizations_manage__account_id__organizations_get: {
         parameters: {
             query?: {
                 table_name?: string | null;
@@ -1707,7 +1888,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": Array<components["schemas"]["Organization"]>;
+                    "application/json": components["schemas"]["Organization"][];
                 };
             };
             /** @description Validation Error */
@@ -1885,7 +2066,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": Array<components["schemas"]["AnalyticsLogRead"]>;
+                    "application/json": components["schemas"]["AnalyticsLogRead"][];
                 };
             };
             /** @description Validation Error */
@@ -2022,7 +2203,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": Array<components["schemas"]["PostRead"]>;
+                    "application/json": components["schemas"]["PostRead"][];
                 };
             };
             /** @description Validation Error */

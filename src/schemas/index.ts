@@ -8,5 +8,5 @@ export type AccountRead = components['schemas']['AccountRead']
 export type Api = components['schemas']['ApiRead']
 export type ApiCreateResponse = components['schemas']['ApiCreateRead']
 
-export type WebhookIntegration = any
+export type Webhooks = components['schemas']['WebhooksRead']
 export type ApiInvocationResponse = components['schemas']['AnalyticsLogRead']

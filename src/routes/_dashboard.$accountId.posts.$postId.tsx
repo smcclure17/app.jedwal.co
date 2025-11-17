@@ -12,6 +12,7 @@ import { DashboardSection } from '@/components/DashboardSection'
 import { LastRepublishedSnippet } from '@/components/LastRepublishedSnippet'
 import { AnalyticsChart } from '@/components/posts/PostAnalyticsChart'
 import { PostLayoutSkeleton } from '@/components/posts/PostLayoutSkeleton'
+import { WebhookIntegrations } from '@/components/WebhookIntegrations'
 
 export const Route = createFileRoute('/_dashboard/$accountId/posts/$postId')({
   head: ({ params }) => ({
@@ -109,12 +110,10 @@ function PostLayout() {
         title="Webhook Integrations"
         subTitle="Webhook integrations allow your apps to stay up to date with your content."
       >
-        <span>Coming Soon</span>
-        {/* <WebhookIntegrations
+        <WebhookIntegrations
           accountId={accountId}
           apiName={postId}
-          webhooks={post.webhooks ?? []}
-        /> */}
+        />
       </DashboardSection>
       <DeletePostButton postId={post.post_key} accountId={accountId} />
     </div>
