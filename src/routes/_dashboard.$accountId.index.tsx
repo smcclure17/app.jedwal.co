@@ -21,7 +21,7 @@ function DashboardHome() {
   // Show skeleton while loading
   if (!user || posts === null || apis === null) {
     return (
-      <div className='max-w-3xl mx-auto flex flex-col justify-center min-h-[calc(100vh-200px)]'>
+      <div className='max-w-3xl mx-auto mt-12 flex flex-col justify-center min-h-[calc(100vh-200px)]'>
         <WelcomeBannerSkeleton />
         <LandingScreenSkeleton />
       </div>

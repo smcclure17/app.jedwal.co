@@ -8,7 +8,7 @@ interface WelcomeBannerProps {
 export function WelcomeBanner({ displayName, subText }: WelcomeBannerProps) {
   return (
     <div className="max-w-4xl">
-      <div className="mb-8">
+      <div className="mb-6 flex flex-col items-center">
         <div className="flex items-center gap-4 mb-2">
           <Image
             src="/logo-cropped.svg"
