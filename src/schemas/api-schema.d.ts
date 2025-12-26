@@ -4,26 +4,6 @@
  */
 
 export interface paths {
-    "/health": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Health Check
-         * @description Health check endpoint.
-         */
-        get: operations["health_check_health_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/login": {
         parameters: {
             query?: never;
@@ -101,23 +81,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/email/unsubscribe": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Unsubscribe */
-        get: operations["unsubscribe_email_unsubscribe_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/manage/{account_id}/": {
         parameters: {
             query?: never;
@@ -160,6 +123,47 @@ export interface paths {
         put?: never;
         post?: never;
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/manage/{account_id}/apis/{api_id}/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Watch Channels
+         * @description Get all watch channels for an API
+         */
+        get: operations["get_watch_channels_manage__account_id__apis__api_id__notifications_get"];
+        put?: never;
+        /**
+         * Create Watch Channel
+         * @description Create or update a new watch channel for an API
+         */
+        post: operations["create_watch_channel_manage__account_id__apis__api_id__notifications_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/manage/{account_id}/apis/{api_id}/notifications/{channel_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Watch Channel */
+        delete: operations["delete_watch_channel_manage__account_id__apis__api_id__notifications__channel_id__delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -292,8 +296,8 @@ export interface paths {
         put?: never;
         /** Create Webhook */
         post: operations["create_webhook_manage__account_id__posts__post_key__webhooks_post"];
-        /** Create Webhook */
-        delete: operations["create_webhook_manage__account_id__posts__post_key__webhooks_delete"];
+        /** Delete Webhook */
+        delete: operations["delete_webhook_manage__account_id__posts__post_key__webhooks_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -450,70 +454,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/{account_id}/apis/{api_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Api Data
-         * @description Get data from a sheet API endpoint.
-         */
-        get: operations["get_api_data__account_id__apis__api_id__get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/{account_id}/posts/{post_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Post Data
-         * @description Get data from a sheet API endpoint.
-         */
-        get: operations["get_post_data__account_id__posts__post_id__get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        /**
-         * Head Post Data
-         * @description Check if a post exists without returning its data.
-         */
-        head: operations["head_post_data__account_id__posts__post_id__head"];
-        patch?: never;
-        trace?: never;
-    };
-    "/{account_id}/posts": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Public Posts For Account
-         * @description Get all APIs for an account.
-         */
-        get: operations["get_public_posts_for_account__account_id__posts_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/billing/stripe-webhook": {
         parameters: {
             query?: never;
@@ -561,33 +501,16 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Root
-         * @description Root endpoint.
-         */
-        get: operations["root__get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         /** AccountRead */
         AccountRead: {
-            /** Id */
+            /**
+             * Id
+             * @description The name/ID of the account (alphanumeric and hyphens only)
+             */
             id: string;
             /** Account Status */
             account_status: string;
@@ -601,7 +524,10 @@ export interface components {
         };
         /** AnalyticsLogRead */
         AnalyticsLogRead: {
-            /** Owner Id */
+            /**
+             * Owner Id
+             * @description The name/ID of the account (alphanumeric and hyphens only)
+             */
             owner_id: string;
             /** Resource Id */
             resource_id: string;
@@ -703,22 +629,6 @@ export interface components {
              */
             spreadsheet_title?: string | null;
         };
-        /** ApiSpreadsheetDataRead */
-        ApiSpreadsheetDataRead: {
-            /** Title */
-            title: string;
-            /** Sheet Id */
-            sheet_id: string;
-            /** Data */
-            data: {
-                [key: string]: unknown;
-            }[];
-            /**
-             * Expires At
-             * Format: date-time
-             */
-            expires_at: string;
-        };
         /**
          * ApiUpdate
          * @description Schema for updating an API - all fields optional for partial updates.
@@ -726,6 +636,73 @@ export interface components {
         ApiUpdate: {
             /** Cache Duration */
             cache_duration?: number | null;
+        };
+        /**
+         * ApiWatchChannelCreate
+         * @description Main model for registration/creation of a watch channel
+         */
+        ApiWatchChannelCreate: {
+            /**
+             * Api Key
+             * @description The Jedwal API this watch channel is for
+             */
+            api_key: string;
+            /**
+             * Owner Id
+             * @description Owner of the parent API
+             */
+            owner_id: string;
+            /**
+             * Webhook Url
+             * @description The URL to notify the user at. Note: not supplied to Google. This is used internally
+             */
+            webhook_url: string;
+            /**
+             * Name
+             * @description Human-readable name for this watch channel
+             */
+            name: string;
+        };
+        /**
+         * ApiWatchChannelRead
+         * @description Response model of a watch channel
+         */
+        ApiWatchChannelRead: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at?: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at?: string;
+            /**
+             * Api Key
+             * @description The Jedwal API this watch channel is for
+             */
+            api_key: string;
+            /**
+             * Owner Id
+             * @description Owner of the parent API
+             */
+            owner_id: string;
+            /**
+             * Webhook Url
+             * @description The URL to notify the user at. Note: not supplied to Google. This is used internally
+             */
+            webhook_url: string;
+            /**
+             * Name
+             * @description Human-readable name for this watch channel
+             */
+            name: string;
+            /**
+             * Channel Id
+             * @description The unique id of the watch channel
+             */
+            channel_id: string;
         };
         /**
          * CategoryCreate
@@ -872,7 +849,7 @@ export interface components {
         PostCreateRequest: {
             /**
              * Post Key
-             * @description The name/ID/slug of the post
+             * @description The name/ID/slug of the post (alphanumeric and hyphens only)
              */
             post_key: string;
             /**
@@ -880,28 +857,6 @@ export interface components {
              * @description The Google Doc ID to create a post from
              */
             google_doc_id: string;
-        };
-        /** PostDocumentDataRead */
-        PostDocumentDataRead: {
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at?: string;
-            /**
-             * Updated At
-             * Format: date-time
-             */
-            updated_at?: string;
-            /** Title */
-            title: string;
-            /** Document Id */
-            document_id: string;
-            /**
-             * Content
-             * @description The post data content.
-             */
-            content: string;
         };
         /** PostRead */
         PostRead: {
@@ -915,9 +870,15 @@ export interface components {
              * Format: date-time
              */
             updated_at?: string;
-            /** Post Key */
+            /**
+             * Post Key
+             * @description The name/ID/slug of the post (alphanumeric and hyphens only)
+             */
             post_key: string;
-            /** Owner Id */
+            /**
+             * Owner Id
+             * @description The name/ID of the account (alphanumeric and hyphens only)
+             */
             owner_id: string;
             /** Title */
             title: string;
@@ -938,37 +899,45 @@ export interface components {
             /** Error Type */
             type: string;
         };
-        /** WebhookIntegration */
-        "WebhookIntegration-Input": {
-            /**
-             * Url
-             * Format: uri
-             */
+        /** Webhook */
+        Webhook: {
+            /** Url */
             url: string;
             /**
              * Method
              * @enum {string}
              */
             method: "GET" | "POST";
-            /** Payload */
-            payload?: string | null;
             /** Name */
             name?: string | null;
+            /** Payload */
+            payload?: {
+                [key: string]: unknown;
+            } | null;
         };
-        /** WebhookIntegration */
-        "WebhookIntegration-Output": {
-            /**
-             * Url
-             * Format: uri
-             */
+        /** WebhookCreateRequest */
+        WebhookCreateRequest: {
+            /** Url */
             url: string;
             /**
              * Method
              * @enum {string}
              */
             method: "GET" | "POST";
+            /** Name */
+            name?: string | null;
             /** Payload */
-            payload?: unknown | null;
+            payload?: string | null;
+        };
+        /** WebhookDeleteRequest */
+        WebhookDeleteRequest: {
+            /** Url */
+            url: string;
+            /**
+             * Method
+             * @enum {string}
+             */
+            method: "GET" | "POST";
             /** Name */
             name?: string | null;
         };
@@ -988,7 +957,7 @@ export interface components {
              * Webhooks
              * @description The webhook configs for this post
              */
-            webhooks: components["schemas"]["WebhookIntegration-Output"][];
+            webhooks: components["schemas"]["Webhook"][];
         };
         /**
          * WorksheetNamesRead
@@ -1010,26 +979,6 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    health_check_health_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-        };
-    };
     login_login_get: {
         parameters: {
             query?: never;
@@ -1132,38 +1081,6 @@ export interface operations {
             };
         };
     };
-    unsubscribe_email_unsubscribe_get: {
-        parameters: {
-            query: {
-                account_id: string;
-                table_name?: string | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
     get_manage__account_id___get: {
         parameters: {
             query?: {
@@ -1251,6 +1168,112 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["WorksheetNamesRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_watch_channels_manage__account_id__apis__api_id__notifications_get: {
+        parameters: {
+            query?: {
+                table_name?: string | null;
+            };
+            header?: never;
+            path: {
+                account_id: string;
+                api_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiWatchChannelRead"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_watch_channel_manage__account_id__apis__api_id__notifications_post: {
+        parameters: {
+            query?: {
+                table_name?: string | null;
+            };
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApiWatchChannelCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiWatchChannelRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_watch_channel_manage__account_id__apis__api_id__notifications__channel_id__delete: {
+        parameters: {
+            query?: {
+                table_name?: string | null;
+            };
+            header?: never;
+            path: {
+                account_id: string;
+                api_id: string;
+                channel_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
                 };
             };
             /** @description Validation Error */
@@ -1595,7 +1618,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["WebhookIntegration-Input"];
+                "application/json": components["schemas"]["WebhookCreateRequest"];
             };
         };
         responses: {
@@ -1619,7 +1642,7 @@ export interface operations {
             };
         };
     };
-    create_webhook_manage__account_id__posts__post_key__webhooks_delete: {
+    delete_webhook_manage__account_id__posts__post_key__webhooks_delete: {
         parameters: {
             query?: {
                 table_name?: string | null;
@@ -1633,7 +1656,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["WebhookIntegration-Input"];
+                "application/json": components["schemas"]["WebhookDeleteRequest"];
             };
         };
         responses: {
@@ -1728,8 +1751,6 @@ export interface operations {
         parameters: {
             query?: {
                 table_name?: string | null;
-                bucket_location?: string | null;
-                bucket_url?: string | null;
             };
             header?: never;
             path: {
@@ -2080,143 +2101,6 @@ export interface operations {
             };
         };
     };
-    get_api_data__account_id__apis__api_id__get: {
-        parameters: {
-            query?: {
-                worksheet?: string | null;
-                table_name?: string | null;
-            };
-            header?: never;
-            path: {
-                account_id: string;
-                api_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiSpreadsheetDataRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_post_data__account_id__posts__post_id__get: {
-        parameters: {
-            query?: {
-                table_name?: string | null;
-            };
-            header?: never;
-            path: {
-                account_id: string;
-                post_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PostDocumentDataRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    head_post_data__account_id__posts__post_id__head: {
-        parameters: {
-            query?: {
-                table_name?: string | null;
-            };
-            header?: never;
-            path: {
-                account_id: string;
-                post_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_public_posts_for_account__account_id__posts_get: {
-        parameters: {
-            query?: {
-                categories?: string | null;
-                table_name?: string | null;
-            };
-            header?: never;
-            path: {
-                account_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PostRead"][];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
     stripe_webhook_billing_stripe_webhook_post: {
         parameters: {
             query?: {
@@ -2277,26 +2161,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    root__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
                 };
             };
         };

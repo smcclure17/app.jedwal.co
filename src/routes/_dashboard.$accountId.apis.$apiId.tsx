@@ -10,6 +10,7 @@ import { PostLayoutSkeleton } from '@/components/posts/PostLayoutSkeleton'
 import { DeleteApiButton } from '@/components/apis/DeleteApiButton'
 import { ApiCopyableSnippet } from '@/components/apis/ApiCopyableSnippet'
 import { CacheInput } from '@/components/apis/ApiUpdateCadence'
+import { ApiWatchChannels } from '@/components/apis/ApiWatchChannels'
 
 export const Route = createFileRoute('/_dashboard/$accountId/apis/$apiId')({
   head: ({ params }) => ({
@@ -36,7 +37,7 @@ function PostLayout() {
   const postJedwalUrl = `${config.api.url}/${accountId}/api/${post.api_key}`
 
   return (
-    <div className="flex flex-col space-y-6 w-full">
+    <div className="flex flex-col space-y-6 max-w-xl">
       <div className="flex flex-col space-y-2">
         <div className="flex flex-col space-y-1">
           <div className="flex space-x-2">
@@ -77,6 +78,14 @@ function PostLayout() {
           resourceType={'api'}
           postId={apiId}
         />
+      </DashboardSection>
+      <DashboardSection
+        title="Notifications"
+        subTitle="Get notified whenever the underlying spreadsheet is updated. Supply a webhook URL that accepts POST requests."
+      >
+        <div className="pt-2">
+          <ApiWatchChannels accountId={accountId} apiId={apiId} />
+        </div>
       </DashboardSection>
       <DeleteApiButton postId={post.api_key} accountId={accountId} />
     </div>

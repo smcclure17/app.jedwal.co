@@ -1,4 +1,4 @@
-import type { Api, ApiCreateResponse } from '@/schemas'
+import type { Api, ApiCreateResponse, ApiWatchChannel } from '@/schemas'
 import config from '@/config'
 
 export async function fetchApis(accountId: string) {
@@ -29,7 +29,11 @@ export const createApi = async (
 ): Promise<ApiCreateResponse> => {
   const res = await fetch(`${config.api.url}/manage/${accountId}/apis`, {
     method: 'POST',
-    body: JSON.stringify({ google_sheet_id: googleId, frozen: false, cache_duration: 60 }),
+    body: JSON.stringify({
+      google_sheet_id: googleId,
+      frozen: false,
+      cache_duration: 60,
+    }),
     credentials: 'include',
     headers: { 'Content-type': 'application/json' },
   })
@@ -73,4 +77,60 @@ export async function fetchWorksheetNames(accountId: string, postId: string) {
     throw new Error(`Failed to fetch: ${JSON.stringify(response)}`)
   }
   return response.json()
+}
+
+export async function createApiWatchChannel(
+  accountId: string,
+  apiId: string,
+  url: string,
+  name: string,
+) {
+  const res = await fetch(
+    `${config.api.url}/manage/${accountId}/apis/${apiId}/notifications`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        api_key: apiId,
+        owner_id: accountId,
+        webhook_url: url,
+        name,
+      }),
+    },
+  )
+
+  if (!res.ok) {
+    throw new Error(`Failed to create api watch channel: ${res.statusText}`)
+  }
+}
+
+export async function getApiWatchChannels(accountId: string, apiId: string) {
+  const res = await fetch(
+    `${config.api.url}/manage/${accountId}/apis/${apiId}/notifications`,
+    { credentials: 'include' },
+  )
+
+  if (!res.ok) {
+    throw new Error(`Failed to create webhook: ${res.statusText}`)
+  }
+  return res.json() as Promise<ApiWatchChannel>
+}
+
+export async function deleteApiWatchChannel(
+  accountId: string,
+  apiId: string,
+  channelId: string,
+) {
+  const res = await fetch(
+    `${config.api.url}/manage/${accountId}/apis/${apiId}/notifications/${channelId}`,
+    {
+      method: 'DELETE',
+      credentials: 'include',
+    },
+  )
+
+  if (!res.ok) {
+    throw new Error(`Failed to delete api watch channel: ${res.statusText}`)
+  }
 }
