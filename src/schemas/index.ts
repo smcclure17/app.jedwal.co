@@ -10,3 +10,7 @@ export type ApiCreateResponse = components['schemas']['ApiCreateRead']
 
 export type Webhooks = components['schemas']['WebhooksRead']
 export type ApiInvocationResponse = components['schemas']['AnalyticsLogRead']
+
+export type ApiWatchChannel = components['schemas']['ApiWatchChannelRead']
+export type ApiWatchChannelCreate =
+  components['schemas']['ApiWatchChannelCreate']

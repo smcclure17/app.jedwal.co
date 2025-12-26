@@ -1,9 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   createApi,
+  createApiWatchChannel,
   deleteApi,
+  deleteApiWatchChannel,
   fetchApis,
   fetchWorksheetNames,
+  getApiWatchChannels,
   postTtlUpdate,
 } from '@/data/fetchers/apis'
 
@@ -65,6 +68,42 @@ export function useUpdateApiTtl(accountId: string, apiName: string) {
     mutationFn: (ttl: number) => postTtlUpdate(accountId, apiName, ttl),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['apis', accountId] })
+    },
+  })
+}
+
+export function useApiWatchChannels(accountId: string, apiId: string) {
+  return useQuery({
+    queryKey: ['api-watch-channels', accountId, apiId],
+    queryFn: () => getApiWatchChannels(accountId, apiId),
+    initialData: null,
+  })
+}
+
+export function useCreateApiWatchChannel(accountId: string, apiId: string) {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ url, name }: { url: string; name: string }) =>
+      createApiWatchChannel(accountId, apiId, url, name),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['api-watch-channels', accountId, apiId],
+      })
+    },
+  })
+}
+
+export function useDeleteApiWatchChannel(accountId: string, apiId: string) {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (channelId: string) =>
+      deleteApiWatchChannel(accountId, apiId, channelId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['api-watch-channels', accountId, apiId],
+      })
     },
   })
 }

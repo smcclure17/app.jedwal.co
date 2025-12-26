@@ -10,7 +10,7 @@ export const DashboardSection = ({
   return (
     <div className="flex flex-col space-y-1">
       <h4 className="text-h4">{title}</h4>
-      {subTitle && <p className="text-xs text-gray-700">{subTitle}</p>}
+      {subTitle && <p className="text-xs text-gray-700 max-w-xl">{subTitle}</p>}
       {children}
     </div>
   )
