@@ -27,9 +27,9 @@ export const createApi = async (
   googleId: string,
   accountId?: string,
 ): Promise<ApiCreateResponse> => {
-  const res = await fetch(`${config.api.url}/api`, {
+  const res = await fetch(`${config.api.url}/manage/${accountId}/apis`, {
     method: 'POST',
-    body: JSON.stringify({ google_id: googleId, owner_id: accountId }),
+    body: JSON.stringify({ google_sheet_id: googleId, frozen: false, cache_duration: 60 }),
     credentials: 'include',
     headers: { 'Content-type': 'application/json' },
   })
