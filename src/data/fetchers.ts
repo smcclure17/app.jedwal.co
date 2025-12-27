@@ -21,7 +21,7 @@ export const createPost = async (
   docApiName: string,
   accountId: string,
 ): Promise<PostCreateResponse> => {
-  const res = await fetch(`${config.api.url}/manage/${accountId}/posts/`, {
+  const res = await fetch(`${config.api.url}/manage/${accountId}/posts`, {
     method: 'POST',
     body: JSON.stringify({
       google_doc_id: googleId,
